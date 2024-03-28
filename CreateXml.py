@@ -99,7 +99,7 @@ for x in range(0, amount_workers):
 
 save_path_file = "NetworkSetup.xml"
 
-#making xml string and removing binary makings
+#making xml string and removing binary markings
 xml_string = str(ET.tostring(platform))
 xml_string = xml_string[2: len(xml_string)-1]
 
