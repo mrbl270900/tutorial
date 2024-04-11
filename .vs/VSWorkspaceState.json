@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\bandwidth-files",
+    "\\speed-files",
+    "\\state-files"
   ],
-  "SelectedNode": "\\link5-bandWidth_file.txt",
+  "SelectedNode": "\\NetworkSetup.xml",
   "PreviewInSolutionExplorer": false
 }
