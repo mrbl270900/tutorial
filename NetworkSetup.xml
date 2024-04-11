@@ -2,18 +2,18 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
   <zone id="zone0" routing="Full">
-    <host id="Server" speed="98.095Mf"/>
-    <host id="Worker0" speed="98.095Mf"/>
-    <host id="Worker1" speed="98.095Mf"/>
-    <host id="Worker2" speed="98.095Mf"/>
-    <host id="Worker3" speed="98.095Mf"/>
-    <host id="Worker4" speed="98.095Mf"/>
-    <link id="0" bandwidth="41.279125MBps" latency="59.904us"/>
-    <link id="1" bandwidth="41.279125MBps" latency="59.904us"/>
-    <link id="2" bandwidth="41.279125MBps" latency="59.904us"/>
-    <link id="3" bandwidth="41.279125MBps" latency="59.904us"/>
-    <link id="4" bandwidth="41.279125MBps" latency="59.904us"/>
-    <link id="5" bandwidth="41.279125MBps" latency="59.904us"/>
+    <host id="Server" speed="98.095Mf" speed_file="availabilityFile.txt" state_file="hostState.txt"/>
+    <host id="Worker0" speed="98.095Mf" speed_file="speed-files/Worker0-speed_file.txt" state_file="state-files/Worker0-state_file.txt"/>
+    <host id="Worker1" speed="98.095Mf" speed_file="speed-files/Worker1-speed_file.txt" state_file="state-files/Worker1-state_file.txt"/>
+    <host id="Worker2" speed="98.095Mf" speed_file="speed-files/Worker2-speed_file.txt" state_file="state-files/Worker2-state_file.txt"/>
+    <host id="Worker3" speed="98.095Mf" speed_file="speed-files/Worker3-speed_file.txt" state_file="state-files/Worker3-state_file.txt"/>
+    <host id="Worker4" speed="98.095Mf" speed_file="speed-files/Worker4-speed_file.txt" state_file="state-files/Worker4-state_file.txt"/>
+    <link id="0" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth.txt"/>
+    <link id="1" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth-files/link1-bandWidth_file.txt"/>
+    <link id="2" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth-files/link2-bandWidth_file.txt"/>
+    <link id="3" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth-files/link3-bandWidth_file.txt"/>
+    <link id="4" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth-files/link4-bandWidth_file.txt"/>
+    <link id="5" bandwidth="41.279125MBps" latency="59.904us" bandWidth_file="bandwidth-files/link5-bandWidth_file.txt"/>
     <route src="Server" dst="Server">
       <link_ctn id="0"/>
     </route>
