@@ -17,6 +17,7 @@ def master(*args):
   compute_cost = int(args[1])
   communicate_cost = int(args[2])
   workers = []
+  pending_comms = []
   for i in range(3, len(args)): 
     workers.append(Mailbox.by_name(args[i]))
   this_actor.info(f"Got {len(workers)} workers and {tasks_count} tasks to process")
@@ -28,13 +29,23 @@ def master(*args):
       # - Send the computation amount to the worker
       if (tasks_count < 10000 or (tasks_count < 100000 and i % 10000 == 0) or i % 100000 == 0):
         this_actor.info(f"Sending task {i} of {tasks_count} to mailbox '{mailbox.name}'")
-      mailbox.put(compute_cost, communicate_cost)
+      
+      try:
+        comm = mailbox.put_async(compute_cost, communicate_cost)
+        pending_comms.append(comm)
+      except:
+         tasks_count = tasks_count + 1
+
 
   this_actor.info("All tasks have been dispatched. Request all workers to stop.")
   for i in range (len(workers)):
       # The workers stop when receiving a negative compute_cost
       mailbox = workers[i]
-      mailbox.put(-1, 0)
+      comm = mailbox.put_async(-1, 0)
+      pending_comms.append(comm)
+
+  for comm in pending_comms:
+        comm.wait()
 # master-end
 
 # worker-begin
@@ -44,9 +55,9 @@ def worker(*args):
   mailbox = Mailbox.by_name(this_actor.get_host().name)
   done = False
   while not done:
-    compute_cost = mailbox.get()
-    if compute_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-      this_actor.execute(compute_cost)
+    data = mailbox.get()
+    if data > 0: # If compute_cost is valid, execute a computation of that cost 
+      this_actor.execute(data)
     else: # Stop when receiving an invalid compute_cost
       done = True
 

@@ -24,10 +24,10 @@ argument= ET.SubElement(actor, "argument")
 argument.set('value', '20')
 
 argument = ET.SubElement(actor, "argument")
-argument.set('value', '50000000')
+argument.set('value', '50000000') # 50 million flop task size 
 
 argument = ET.SubElement(actor, "argument")
-argument.set('value', '1000000')
+argument.set('value', '1000000') # is in bits so one million bits comunication cost
 
 #setting op nodes and add arguments to nodes here also
 for x in range(0,amount_workers):
@@ -70,8 +70,8 @@ speedFile_strings = [
 # Here is a list of strings to put in the generated state txt files 
 stateFile_strings = [
     "1 1\n25 0\nLOOPAFTER 35",  
-    "1 0\n10 1\nLOOPAFTER 35",  
-    "1 0\n20 1\nLOOPAFTER 45"   
+    "1 1\n10 1\nLOOPAFTER 35",  
+    "1 1\n20 1\nLOOPAFTER 45"   
     
 ]
 #=========================================================================
@@ -109,8 +109,8 @@ zone.set('routing', 'Full')
 host = ET.SubElement(zone, "host")
 host.set('id', 'Server')
 host.set('speed', '980950.0Mf') #980.95 gigaflpos
-host.set('speed_file', 'availabilityFile.txt') # availability_file (speed_file) attribute :-D 
-host.set('state_file', 'hostState.txt') # state_file attribute :-D 
+#host.set('speed_file', 'availabilityFile.txt') # availability_file (speed_file) attribute :-D 
+#host.set('state_file', 'hostState.txt') # state_file attribute :-D 
 #the above speed file and state file is only set for the server host. they are generated later in this file.
 
 #setup hosts and links
@@ -137,7 +137,7 @@ link = ET.SubElement(zone, "link")
 link.set('id', '0')
 link.set('bandwidth', '100MBps')
 link.set('latency', '59.904us')
-link.set('bandwidth_file', 'bandwidth.txt' )
+#link.set('bandwidth_file', 'bandwidth.txt' )
 
 for x in range(0, amount_workers):
     link = ET.SubElement(zone, "link")
