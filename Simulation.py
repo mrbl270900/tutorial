@@ -49,28 +49,32 @@ def master(*args):
 
   #make task obj's
   for i in range(0, tasks_count):
-     tasks.append(Task(i,compute_cost ,communicate_cost))
+     tasks.append(Task(i, compute_cost, communicate_cost))
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 1 and len(sent_tasks) < 1:
-    this_actor.info("Server Running")
-    data = server_mailbox.get()
-    this_actor.info(str(data))
-    worker_mailbox = Mailbox.by_name("Worker0")
-    this_actor.info("sending task to:" + str(data.mailbox))
-    comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
-    tasks[0].set_time_pased(time.time())
-    sent_tasks.append(tasks[0])
-    pending_comms.append(comm)
-    tasks.remove(tasks[0])
+  while len(tasks) > 0 or len(sent_tasks) > 0:
+    if len(tasks) > 0:
+      if server_mailbox.ready:
+        this_actor.info("mailbox ready")
+        data = server_mailbox.get()
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name("Worker0")
+        this_actor.info("sending task to:" + str(data.mailbox))
+        comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
+        tasks[0].set_time_pased(time.time())
+        sent_tasks.append(tasks[0])
+        pending_comms.append(comm)
+        tasks.remove(tasks[0])
 
     #check if task sent is done or has waited to long
-    if(len(sent_tasks)> 1): # async?
+    if(len(sent_tasks) > 0): # async?
        for task in sent_tasks:
           if time.time() - task.time_started > 60: # wait time is 60 secunds
              tasks.append(task)
              sent_tasks.remove(task)
+
+  this_actor.info("all taskes done?")
 
   for comm in pending_comms:
         comm.wait()
@@ -93,14 +97,14 @@ def worker(*args):
           if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
             this_actor.info("running:" + str(task.tasknr))
             this_actor.execute(task.computing_cost)
-            #server_mailbox.put(Request_With_Task_Done(mailbox, task))
+            #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
             has_asked_for_task = False
           else: # Stop when receiving an invalid compute_cost
             done = True
             this_actor.info("Exiting now.")
     else:
        this_actor.info("asking for task")
-       server_mailbox.put(Request_For_Task(mailbox), 500)
+       server_mailbox.put_async(Request_For_Task(mailbox), 50)
        has_asked_for_task = True
 
 # worker-end
