@@ -8,7 +8,31 @@
 # ##################################################################################
 
 from simgrid import Actor, Engine, Host, Mailbox, this_actor
+import time
 import sys
+
+# task obj
+class Task:
+  def __init__(self, tasknr, computing_cost, communication_cost, time_started = None):
+    self.tasknr = tasknr
+    self.computing_cost = computing_cost
+    self.communication_cost = communication_cost
+    self.time_pased = time_started
+    
+  def set_time_pased(self, time_pased):
+    self.time_pased = time_pased
+
+
+class Request_For_Task: #can add data about nood here
+   def __init__(self, mailbox):
+      self.mailbox = mailbox
+
+class Request_With_Task_Done:
+   def __init__(self, mailbox, task): 
+      self.mailbox = mailbox
+      self.task = task # as the class task
+
+
 
 # master-begin
 def master(*args):
@@ -16,36 +40,42 @@ def master(*args):
   tasks_count = int(args[0])
   compute_cost = int(args[1])
   communicate_cost = int(args[2])
-  workers = []
   pending_comms = []
-  for i in range(3, len(args)): 
-    workers.append(Mailbox.by_name(args[i]))
-  this_actor.info(f"Got {len(workers)} workers and {tasks_count} tasks to process")
+  tasks = []
+  sent_tasks = []
+  server_mailbox = Mailbox.by_name("Server")
 
-  for i in range(tasks_count): # For each task to be executed: 
-      # - Select a worker in a round-robin way
-      mailbox = workers[i % len(workers)]
+  this_actor.info("Server started")
 
-      # - Send the computation amount to the worker
-      if (tasks_count < 10000 or (tasks_count < 100000 and i % 10000 == 0) or i % 100000 == 0):
-        this_actor.info(f"Sending task {i} of {tasks_count} to mailbox '{mailbox.name}'")
-      
-      try:
-        comm = mailbox.put_async(compute_cost, communicate_cost)
-        pending_comms.append(comm)
-      except:
-         tasks_count = tasks_count + 1
+  #make task obj's
+  for i in range(0, tasks_count):
+     tasks.append(Task(i,compute_cost ,communicate_cost))
 
+  this_actor.info("tasks preprosesed")
 
-  this_actor.info("All tasks have been dispatched. Request all workers to stop.")
-  for i in range (len(workers)):
-      # The workers stop when receiving a negative compute_cost
-      mailbox = workers[i]
-      comm = mailbox.put_async(-1, 0)
-      pending_comms.append(comm)
+  while len(tasks) > 1 and len(sent_tasks) < 1:
+    this_actor.info("Server Running")
+    data = server_mailbox.get()
+    this_actor.info(str(data))
+    worker_mailbox = Mailbox.by_name("Worker0")
+    this_actor.info("sending task to:" + str(data.mailbox))
+    comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
+    tasks[0].set_time_pased(time.time())
+    sent_tasks.append(tasks[0])
+    pending_comms.append(comm)
+    tasks.remove(tasks[0])
+
+    #check if task sent is done or has waited to long
+    if(len(sent_tasks)> 1): # async?
+       for task in sent_tasks:
+          if time.time() - task.time_started > 60: # wait time is 60 secunds
+             tasks.append(task)
+             sent_tasks.remove(task)
 
   for comm in pending_comms:
         comm.wait()
+
+  this_actor.info("all taskes done")
 # master-end
 
 # worker-begin
@@ -53,15 +83,26 @@ def worker(*args):
   assert len(args) == 0, "The worker expects to not get any argument"
 
   mailbox = Mailbox.by_name(this_actor.get_host().name)
+  server_mailbox = Mailbox.by_name("Server")
   done = False
+  has_asked_for_task = False
   while not done:
-    data = mailbox.get()
-    if data > 0: # If compute_cost is valid, execute a computation of that cost 
-      this_actor.execute(data)
-    else: # Stop when receiving an invalid compute_cost
-      done = True
+    if has_asked_for_task:
+        if mailbox.ready:
+          task = mailbox.get()
+          if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+            this_actor.info("running:" + str(task.tasknr))
+            this_actor.execute(task.computing_cost)
+            #server_mailbox.put(Request_With_Task_Done(mailbox, task))
+            has_asked_for_task = False
+          else: # Stop when receiving an invalid compute_cost
+            done = True
+            this_actor.info("Exiting now.")
+    else:
+       this_actor.info("asking for task")
+       server_mailbox.put(Request_For_Task(mailbox), 500)
+       has_asked_for_task = True
 
-  this_actor.info("Exiting now.")
 # worker-end
 
 # main-begin
