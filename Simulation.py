@@ -43,7 +43,7 @@ def master(*args):
   pending_comms = []
   tasks = []
   sent_tasks = []
-  server_mailbox = Mailbox.by_name("Server")
+  server_mailbox = Mailbox.by_name(this_actor.get_host().name)
 
   this_actor.info("Server started")
 
@@ -59,7 +59,7 @@ def master(*args):
         this_actor.info("mailbox ready")
         data = server_mailbox.get()
         this_actor.info(str(data))
-        worker_mailbox = Mailbox.by_name("Worker0")
+        worker_mailbox = Mailbox.by_name(str(data.mailbox))
         this_actor.info("sending task to:" + str(data.mailbox))
         comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
         tasks[0].set_time_pased(time.time())
@@ -85,27 +85,27 @@ def master(*args):
 # worker-begin
 def worker(*args):
   assert len(args) == 0, "The worker expects to not get any argument"
-
-  mailbox = Mailbox.by_name(this_actor.get_host().name)
+  #mailbox = Mailbox.by_name(this_actor.get_host().name)
+  this_actor.info("her2")
   server_mailbox = Mailbox.by_name("Server")
   done = False
   has_asked_for_task = False
   while not done:
     if has_asked_for_task:
-        if mailbox.ready:
-          task = mailbox.get()
-          if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-            this_actor.info("running:" + str(task.tasknr))
-            this_actor.execute(task.computing_cost)
-            #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
-            has_asked_for_task = False
-          else: # Stop when receiving an invalid compute_cost
-            done = True
-            this_actor.info("Exiting now.")
+      if mailbox.ready:
+        task = mailbox.get()
+        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+          this_actor.info("running:" + str(task.tasknr))
+          this_actor.execute(task.computing_cost)
+          #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
+          has_asked_for_task = False
+        else: # Stop when receiving an invalid compute_cost
+          done = True
+          this_actor.info("Exiting now.")
     else:
-       this_actor.info("asking for task")
-       server_mailbox.put_async(Request_For_Task(mailbox), 50)
-       has_asked_for_task = True
+      this_actor.info("asking for task")
+      server_mailbox.put_async(Request_For_Task(mailbox), 50)
+      has_asked_for_task = True
 
 # worker-end
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     e.register_actor("worker", worker)
 
     # Load the platform description and then deploy the application
-    e.load_platform(sys.argv[1]) 
+    e.load_platform(sys.argv[1])
     e.load_deployment(sys.argv[2])
 
     # Run the simulation
