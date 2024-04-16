@@ -78,9 +78,10 @@ def master(*args):
 
     #check if task sent is done or has waited to long
     if(len(sent_tasks) > 0): # async?
+       current_time = time.time()
        for task in sent_tasks:
           #this_actor.info("is tasks sent not done?")
-          if time.time() - task.time_started > 60: # wait time is 60 secunds
+          if current_time - task.time_started > 60: # wait time is 60 secunds
              tasks.append(task)
              sent_tasks.remove(task)
 
