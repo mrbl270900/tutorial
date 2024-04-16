@@ -117,6 +117,7 @@ def master(*args):
 #       this_actor.info("Exiting now.")
 #
 # worker-begin v 2.0
+#
 def worker(*args):
     assert len(args) == 0, "The worker expects to not get any argument"
     this_actor.info("Worker starting")
