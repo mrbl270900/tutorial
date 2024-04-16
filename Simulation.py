@@ -44,6 +44,7 @@ def master(*args):
   tasks = []
   sent_tasks = []
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
+  server_mailbox.set_receiver(Actor.self())
 
   this_actor.info("Server started")
 
@@ -52,6 +53,10 @@ def master(*args):
      tasks.append(Task(i, compute_cost, communicate_cost))
 
   this_actor.info("tasks preprosesed")
+
+  mailbox = Mailbox.by_name("Worker0")
+  mailbox.put_init(tasks[0], 0).detach()
+
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     if len(tasks) > 0:
@@ -85,27 +90,31 @@ def master(*args):
 # worker-begin
 def worker(*args):
   assert len(args) == 0, "The worker expects to not get any argument"
-  #mailbox = Mailbox.by_name(this_actor.get_host().name)
-  this_actor.info("her2")
+  this_actor.info("worker starting")
+  this_actor.info(str(this_actor.get_host().name))
+  testVariable = str(this_actor.get_host().name)
+  mailbox = Mailbox.by_name(testVariable)
+  mailbox.set_receiver(Actor.self())
+  this_actor.info("worker mail box done")
   server_mailbox = Mailbox.by_name("Server")
+  this_actor.info("server mail box done")
   done = False
-  has_asked_for_task = False
   while not done:
-    if has_asked_for_task:
-      if mailbox.ready:
-        task = mailbox.get()
-        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-          this_actor.info("running:" + str(task.tasknr))
-          this_actor.execute(task.computing_cost)
-          #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
-          has_asked_for_task = False
-        else: # Stop when receiving an invalid compute_cost
-          done = True
-          this_actor.info("Exiting now.")
-    else:
-      this_actor.info("asking for task")
-      server_mailbox.put_async(Request_For_Task(mailbox), 50)
-      has_asked_for_task = True
+    this_actor.info("asking for task")
+    comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
+    this_actor.info("asked for task")
+    comm.wait()
+    this_actor.info("waiting for task")
+    if mailbox.ready:
+      this_actor.info("task ready")
+      task = mailbox.get()
+      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        this_actor.info("running:" + str(task.tasknr))
+        this_actor.execute(task.computing_cost)
+        #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
+      else: # Stop when receiving an invalid compute_cost
+        done = True
+        this_actor.info("Exiting now.")
 
 # worker-end
 
