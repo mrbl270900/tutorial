@@ -88,34 +88,61 @@ def master(*args):
 # master-end
 
 # worker-begin
+#def worker(*args):
+#  assert len(args) == 0, "The worker expects to not get any argument"
+#  this_actor.info("worker starting")
+#  this_actor.info(str(this_actor.get_host().name))
+#  testVariable = str(this_actor.get_host().name)
+#  mailbox = Mailbox.by_name(testVariable)
+#  mailbox.set_receiver(Actor.self())
+#  this_actor.info("worker mail box done")
+#  server_mailbox = Mailbox.by_name("Server")
+#  this_actor.info("server mail box done")
+#  done = False
+#  while not done:
+#    this_actor.info("asking for task")
+#    comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
+#    this_actor.info("asked for task")
+#    comm.wait()
+#    this_actor.info("waiting for task")
+#    if mailbox.ready:
+#      this_actor.info("task ready")
+#      task = mailbox.get()
+#      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+#        this_actor.info("running:" + str(task.tasknr))
+#        this_actor.execute(task.computing_cost)
+#        #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
+#      else: # Stop when receiving an invalid compute_cost
+#        done = True
+#       this_actor.info("Exiting now.")
+#
+# worker-begin v 2.0
 def worker(*args):
-  assert len(args) == 0, "The worker expects to not get any argument"
-  this_actor.info("worker starting")
-  this_actor.info(str(this_actor.get_host().name))
-  testVariable = str(this_actor.get_host().name)
-  mailbox = Mailbox.by_name(testVariable)
-  mailbox.set_receiver(Actor.self())
-  this_actor.info("worker mail box done")
-  server_mailbox = Mailbox.by_name("Server")
-  this_actor.info("server mail box done")
-  done = False
-  while not done:
-    this_actor.info("asking for task")
-    comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
-    this_actor.info("asked for task")
-    comm.wait()
-    this_actor.info("waiting for task")
-    if mailbox.ready:
-      this_actor.info("task ready")
-      task = mailbox.get()
-      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-        this_actor.info("running:" + str(task.tasknr))
-        this_actor.execute(task.computing_cost)
-        #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
-      else: # Stop when receiving an invalid compute_cost
-        done = True
-        this_actor.info("Exiting now.")
+    assert len(args) == 0, "The worker expects to not get any argument"
+    this_actor.info("Worker starting")
+    host_name = this_actor.get_host().name
+    mailbox = Mailbox.by_name(host_name)
+    mailbox.set_receiver(Actor.self())
+    this_actor.info("Worker mailbox set up")
+    server_mailbox = Mailbox.by_name("Server")
 
+    done = False
+    while not done:
+        this_actor.info("Asking for task")
+        server_mailbox.put(Request_For_Task(mailbox))
+        this_actor.info("Task request sent")
+        task = mailbox.get()
+        
+        if task:
+            this_actor.info("Received task: " + str(task.tasknr))
+            if task.computing_cost > 0:
+                this_actor.info("Running: " + str(task.tasknr))
+                this_actor.execute(task.computing_cost)
+                
+                server_mailbox.put(Request_With_Task_Done(mailbox, task))
+            else:
+                done = True
+                this_actor.info("Exiting")
 # worker-end
 
 # main-begin

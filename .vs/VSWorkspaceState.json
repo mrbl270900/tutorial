@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\bandwidth-files",
-    "\\speed-files",
-    "\\state-files"
+    ""
   ],
-  "SelectedNode": "\\NetworkSetup.xml",
+  "SelectedNode": "\\Simulation.py",
   "PreviewInSolutionExplorer": false
 }
