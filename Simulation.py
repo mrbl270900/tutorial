@@ -52,7 +52,7 @@ def master(*args):
   for i in range(0, tasks_count):
      tasks.append(Task(i, compute_cost, communicate_cost))
 
-  this_actor.info("tasks preprosesed")
+  this_actor.info("tasks preprosesed x")
 
   mailbox = Mailbox.by_name("Worker0")
   mailbox.put_init(tasks[0], 0).detach()
