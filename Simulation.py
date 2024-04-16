@@ -18,14 +18,15 @@ class Task:
     self.computing_cost = computing_cost
     self.communication_cost = communication_cost
     self.time_pased = time_started
-    
+    self.time_started = time_started if time_started is not None else time.time()
   def set_time_pased(self, time_pased):
     self.time_pased = time_pased
 
 
-class Request_For_Task: #can add data about nood here
+class Request_For_Task: #can add data about node here
    def __init__(self, mailbox):
       self.mailbox = mailbox
+      this_actor.info("Request_For_Task instance created with mailbox: " + str(mailbox))
 
 class Request_With_Task_Done:
    def __init__(self, mailbox, task): 
@@ -47,6 +48,7 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
 
   this_actor.info("Server started")
+  this_actor.info(str(tasks_count))
 
   #make task obj's
   for i in range(0, tasks_count):
@@ -59,22 +61,25 @@ def master(*args):
 
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
+    #this_actor.info(f"One of the following tasks or sent_tasks is larger than 0") #i am used for debugging
     if len(tasks) > 0:
-      if server_mailbox.ready:
-        this_actor.info("mailbox ready")
-        data = server_mailbox.get()
-        this_actor.info(str(data))
-        worker_mailbox = Mailbox.by_name(str(data.mailbox))
-        this_actor.info("sending task to:" + str(data.mailbox))
-        comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
-        tasks[0].set_time_pased(time.time())
-        sent_tasks.append(tasks[0])
-        pending_comms.append(comm)
-        tasks.remove(tasks[0])
+      #this_actor.info(f"the length of tasks is larger than 0") #i am also used for debugging
+      #if server_mailbox.ready:
+      this_actor.info("mailbox ready")
+      data = server_mailbox.get()
+      this_actor.info(str(data))
+      worker_mailbox = Mailbox.by_name(str(data.mailbox))
+      this_actor.info("sending task to:" + str(data.mailbox))
+      comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
+      tasks[0].set_time_pased(time.time())
+      sent_tasks.append(tasks[0])
+      pending_comms.append(comm)
+      tasks.remove(tasks[0])
 
     #check if task sent is done or has waited to long
     if(len(sent_tasks) > 0): # async?
        for task in sent_tasks:
+          #this_actor.info("is tasks sent not done?")
           if time.time() - task.time_started > 60: # wait time is 60 secunds
              tasks.append(task)
              sent_tasks.remove(task)
@@ -82,7 +87,7 @@ def master(*args):
   this_actor.info("all taskes done?")
 
   for comm in pending_comms:
-        comm.wait()
+    comm.wait()
 
   this_actor.info("all taskes done")
 # master-end
@@ -101,9 +106,20 @@ def worker(*args):
   done = False
   while not done:
     this_actor.info("asking for task")
-    comm = server_mailbox.put_async(Request_For_Task(mailbox), 0)
-    this_actor.info("asked for task")
-    comm.wait()
+    
+
+    try:
+        #if server_mailbox.ready:
+        this_actor.info("I'm trying to send a request for a task'")
+        comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
+        this_actor.info("asked for task")
+        comm.wait()
+        #else:
+            #this_actor.info("The server mailbox is not ready yet")
+    except Exception as e:
+        this_actor.info(f"An error occurred while putting async task: {e}")
+
+    
     this_actor.info("waiting for task")
     if mailbox.ready:
       this_actor.info("task ready")
