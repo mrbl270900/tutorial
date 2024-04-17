@@ -152,5 +152,5 @@ if __name__ == '__main__':
     # Run the simulation
     e.run()
 
-    this_actor.info("Simulation is over")-
+    this_actor.info("Simulation is over")
 # main-end
