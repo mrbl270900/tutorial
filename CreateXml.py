@@ -21,7 +21,7 @@ actor.set('function', 'master')
 
 #setting up tasks to be done/ arguments for main server node
 argument= ET.SubElement(actor, "argument")
-argument.set('value', '20') # amount of tasks
+argument.set('value', '100') # amount of tasks
 
 argument = ET.SubElement(actor, "argument")
 argument.set('value', '50000000') # 50 million flop task size 
