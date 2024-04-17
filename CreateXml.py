@@ -24,7 +24,7 @@ argument= ET.SubElement(actor, "argument")
 argument.set('value', '100') # amount of tasks
 
 argument = ET.SubElement(actor, "argument")
-argument.set('value', '50000000') # 50 million flop task size 
+argument.set('value', '25000000000') # 25.000 million flop task size should tak around 12 sec for a node 
 
 argument = ET.SubElement(actor, "argument")
 argument.set('value', '10000000') # is in bits so 10 million bits comunication cost or 10 megabites
