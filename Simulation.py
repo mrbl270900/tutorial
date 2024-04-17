@@ -69,7 +69,7 @@ def master(*args):
       data = server_mailbox.get()
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.mailbox))
-      this_actor.info("sending task to:" + str(data.mailbox))
+      this_actor.info("sending " + tasks[0].tasknr + " to:" + str(data.mailbox))
       comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
       tasks[0].set_time_pased(time.time())
       sent_tasks.append(tasks[0])
