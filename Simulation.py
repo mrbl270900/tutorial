@@ -77,13 +77,22 @@ def master(*args):
       tasks.remove(tasks[0])
 
     #check if task sent is done or has waited to long
-    if(len(sent_tasks) > 0): # async?
-       current_time = time.time()
-       for task in sent_tasks:
+    #if(len(sent_tasks) > 0): # async?
+       #current_time = time.time()
+       #for task in sent_tasks:
           #this_actor.info("is tasks sent not done?")
-          if current_time - task.time_started > 60: # wait time is 60 secunds
-             tasks.append(task)
-             sent_tasks.remove(task)
+          #if current_time - task.time_started > 60: # wait time is 60 secunds
+             #tasks.append(task)
+             #sent_tasks.remove(task)
+    if(len(tasks) < 1 or len(sent_tasks) < 1):
+      this_actor.info("mailbox ready")
+      data = server_mailbox.get()
+      this_actor.info(str(data))
+      worker_mailbox = Mailbox.by_name(str(data.mailbox))
+      this_actor.info("sending stop to:" + str(data.mailbox))
+      comm = worker_mailbox.put_async(-1, 1)
+      pending_comms.append(comm)
+
 
   this_actor.info("all taskes done?")
 
