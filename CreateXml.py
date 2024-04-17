@@ -61,25 +61,25 @@ with open(save_path_file, 'w') as f:
 # Here is a list of strings to put in the generated speed txt files
 # all of the strings in the three lists follow the conventions listed in the SIMGRID documentation :-D
 speedFile_strings = [
-    "1 0.5\n2 0.3\n4 0.2\nLOOPAFTER 5",  
-    "1 0.2\n2 0.5\n4 0.4\nLOOPAFTER 5",  
-    "1 0.3\n2 0.2\n4 0.1\nLOOPAFTER 5"   
+    "0 0.5\n2 0.3\n4 0.2\nLOOPAFTER 5",  
+    "0 0.2\n2 0.5\n4 0.4\nLOOPAFTER 5",  
+    "0 0.3\n2 0.2\n4 0.1\nLOOPAFTER 5"   
     
 ]
 #=========================================================================
 # Here is a list of strings to put in the generated state txt files 
 stateFile_strings = [
-    "1 1\n25 0\nLOOPAFTER 35",  
-    "1 1\n10 0\nLOOPAFTER 35",  
-    "1 1\n20 0\nLOOPAFTER 45"   
+    "0 1\n25 0\nLOOPAFTER 35",  
+    "0 0\n10 1\nLOOPAFTER 35",  
+    "0 0\n20 1\nLOOPAFTER 45"   
     
 ]
 #=========================================================================
 # Here is a list of strings to put in the generated bandwidth txt files
 bandwidthFile_strings = [
-    "1.0 40000000\n7.0 60000000\nLOOPAFTER 12",  
-    "1.0 35000000\n9.0 55000000\nLOOPAFTER 12",  
-    "1.0 45000000\n6.0 65000000\nLOOPAFTER 12"   
+    "0.0 40000000\n7.0 60000000\nLOOPAFTER 12",  
+    "0.0 35000000\n9.0 55000000\nLOOPAFTER 12",  
+    "0.0 45000000\n6.0 65000000\nLOOPAFTER 12"   
     
 ]
 
