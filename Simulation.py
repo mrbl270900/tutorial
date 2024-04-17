@@ -84,7 +84,7 @@ def master(*args):
           #if current_time - task.time_started > 60: # wait time is 60 secunds
              #tasks.append(task)
              #sent_tasks.remove(task)
-    if(len(tasks) < 1 or len(sent_tasks) < 1):
+    if(len(tasks) < 1 and len(sent_tasks) < 1):
       this_actor.info("mailbox ready")
       data = server_mailbox.get()
       this_actor.info(str(data))
