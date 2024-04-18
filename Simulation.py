@@ -92,7 +92,6 @@ def master(*args):
       worker_mailbox = Mailbox.by_name(str(data.mailbox))
       this_actor.info("sending stop to:" + str(data.mailbox))
       comm = worker_mailbox.put_async(-1, 1)
-      comm.wait()
 
 
   this_actor.info("all taskes done")
@@ -119,7 +118,6 @@ def worker(*args):
         this_actor.info("I'm trying to send a request for a task'")
         comm = server_mailbox.put(Request_For_Task(mailbox), 50)
         this_actor.info("asked for task")
-        comm.wait()
         if mailbox.ready:
           this_actor.info("task ready")
           task = mailbox.get()
