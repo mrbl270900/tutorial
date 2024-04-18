@@ -26,7 +26,6 @@ class Task:
 class Request_For_Task: #can add data about node here
    def __init__(self, mailbox):
       self.mailbox = mailbox
-      this_actor.info("Request_For_Task instance created with mailbox: " + str(mailbox))
 
 class Request_With_Task_Done:
    def __init__(self, mailbox, task): 
