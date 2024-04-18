@@ -53,17 +53,10 @@ def master(*args):
   for i in range(0, tasks_count):
      tasks.append(Task(i, compute_cost, communicate_cost))
 
-  this_actor.info("tasks preprosesed x")
-
-  mailbox = Mailbox.by_name("Worker0")
-  mailbox.put_init(tasks[0], 0).detach()
-
+  this_actor.info("tasks preprosesed")
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
-    #this_actor.info(f"One of the following tasks or sent_tasks is larger than 0") #i am used for debugging
     if len(tasks) > 0:
-      #this_actor.info(f"the length of tasks is larger than 0") #i am also used for debugging
-      #if server_mailbox.ready:
       this_actor.info("mailbox ready")
       data = server_mailbox.get()
       this_actor.info(str(data))
@@ -72,18 +65,7 @@ def master(*args):
       task = tasks[0]
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_async(task, task.communication_cost)
-      #tasks[0].set_time_pased(time.time())
-      #sent_tasks.append(tasks[0])
-      
 
-    #check if task sent is done or has waited to long
-    #if(len(sent_tasks) > 0): # async?
-       #current_time = time.time()
-       #for task in sent_tasks:
-          #this_actor.info("is tasks sent not done?")
-          #if current_time - task.time_started > 60: # wait time is 60 secunds
-             #tasks.append(task)
-             #sent_tasks.remove(task)
     if(len(tasks) < 1 and len(sent_tasks) < 1):
       this_actor.info("mailbox ready")
       data = server_mailbox.get()
@@ -121,7 +103,7 @@ def worker(*args):
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
-          #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
+          #add task done code here
         else: # Stop when receiving an invalid compute_cost
           done = True
           this_actor.info("Exiting now.")
