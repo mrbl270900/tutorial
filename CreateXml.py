@@ -6,7 +6,7 @@ import os
 platform = ET.Element('platform')
 platform.set('version', '4.1')
 
-amount_workers = 5
+amount_workers = 10
 
 class Worker:
   def __init__(self, host):

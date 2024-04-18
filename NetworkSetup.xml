@@ -8,12 +8,22 @@
     <host id="Worker2" speed="4215.0Mf" speed_file="speed-files/Worker2-speed_file.txt" state_file="state-files/Worker2-state_file.txt"/>
     <host id="Worker3" speed="4215.0Mf" speed_file="speed-files/Worker3-speed_file.txt" state_file="state-files/Worker3-state_file.txt"/>
     <host id="Worker4" speed="4215.0Mf" speed_file="speed-files/Worker4-speed_file.txt" state_file="state-files/Worker4-state_file.txt"/>
+    <host id="Worker5" speed="4215.0Mf" speed_file="speed-files/Worker5-speed_file.txt" state_file="state-files/Worker5-state_file.txt"/>
+    <host id="Worker6" speed="4215.0Mf" speed_file="speed-files/Worker6-speed_file.txt" state_file="state-files/Worker6-state_file.txt"/>
+    <host id="Worker7" speed="4215.0Mf" speed_file="speed-files/Worker7-speed_file.txt" state_file="state-files/Worker7-state_file.txt"/>
+    <host id="Worker8" speed="4215.0Mf" speed_file="speed-files/Worker8-speed_file.txt" state_file="state-files/Worker8-state_file.txt"/>
+    <host id="Worker9" speed="4215.0Mf" speed_file="speed-files/Worker9-speed_file.txt" state_file="state-files/Worker9-state_file.txt"/>
     <link id="0" bandwidth="100MBps" latency="59.904us"/>
     <link id="1" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link1-bandWidth_file.txt"/>
     <link id="2" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link2-bandWidth_file.txt"/>
     <link id="3" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link3-bandWidth_file.txt"/>
     <link id="4" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link4-bandWidth_file.txt"/>
     <link id="5" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link5-bandWidth_file.txt"/>
+    <link id="6" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link6-bandWidth_file.txt"/>
+    <link id="7" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link7-bandWidth_file.txt"/>
+    <link id="8" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link8-bandWidth_file.txt"/>
+    <link id="9" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link9-bandWidth_file.txt"/>
+    <link id="10" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link10-bandWidth_file.txt"/>
     <route src="Server" dst="Server">
       <link_ctn id="0"/>
     </route>
@@ -31,6 +41,21 @@
     </route>
     <route src="Server" dst="Worker4">
       <link_ctn id="5"/>
+    </route>
+    <route src="Server" dst="Worker5">
+      <link_ctn id="6"/>
+    </route>
+    <route src="Server" dst="Worker6">
+      <link_ctn id="7"/>
+    </route>
+    <route src="Server" dst="Worker7">
+      <link_ctn id="8"/>
+    </route>
+    <route src="Server" dst="Worker8">
+      <link_ctn id="9"/>
+    </route>
+    <route src="Server" dst="Worker9">
+      <link_ctn id="10"/>
     </route>
   </zone>
 </platform>
