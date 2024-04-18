@@ -73,7 +73,6 @@ def master(*args):
       task = tasks[0]
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_async(task, task.communication_cost)
-      comm.wait()
       #tasks[0].set_time_pased(time.time())
       #sent_tasks.append(tasks[0])
       
