@@ -90,16 +90,13 @@ def worker(*args):
   server_mailbox = Mailbox.by_name("Server")
   this_actor.info("server mail box done")
   done = False
-  asked_for_task = False
+  has_not_asked_for_task = False
   while not done:
-    this_actor.info("asking for task")
-    
-
     try:
-        if asked_for_task:
+        if has_not_asked_for_task:
           #if server_mailbox.ready:
           this_actor.info("I'm trying to send a request for a task'")
-          asked_for_task = True
+          has_not_asked_for_task = False
           comm = server_mailbox.put(Request_For_Task(mailbox), 50)
           this_actor.info("asked for task")
         
@@ -107,7 +104,7 @@ def worker(*args):
           task = mailbox.get()
           if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
             this_actor.info("running:" + str(task.tasknr))
-            asked_for_task = False
+            has_not_asked_for_task = True
             this_actor.execute(task.computing_cost)
             #add task done code here
           else: # Stop when receiving an invalid compute_cost
