@@ -90,23 +90,28 @@ def worker(*args):
   server_mailbox = Mailbox.by_name("Server")
   this_actor.info("server mail box done")
   done = False
+  asked_for_task = False
   while not done:
     this_actor.info("asking for task")
     
 
     try:
-        #if server_mailbox.ready:
-        this_actor.info("I'm trying to send a request for a task'")
-        comm = server_mailbox.put(Request_For_Task(mailbox), 50)
-        this_actor.info("asked for task")
-        task = mailbox.get()
-        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-          this_actor.info("running:" + str(task.tasknr))
-          this_actor.execute(task.computing_cost)
-          #add task done code here
-        else: # Stop when receiving an invalid compute_cost
-          done = True
-          this_actor.info("Exiting now.")
+        if not asked_for_task:
+          #if server_mailbox.ready:
+          this_actor.info("I'm trying to send a request for a task'")
+          comm = server_mailbox.put(Request_For_Task(mailbox), 50)
+          this_actor.info("asked for task")
+        if mailbox.ready():
+          task = mailbox.get()
+          if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+            this_actor.info("running:" + str(task.tasknr))
+            this_actor.execute(task.computing_cost)
+            #add task done code here
+          else: # Stop when receiving an invalid compute_cost
+            done = True
+            this_actor.info("Exiting now.")
+        else:
+           this_actor.sleep_for(0.01)
     except Exception as e:
         this_actor.info(f"An error occurred while putting async task: {e}")
 
