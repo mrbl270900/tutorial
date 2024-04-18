@@ -117,7 +117,7 @@ def worker(*args):
     try:
         #if server_mailbox.ready:
         this_actor.info("I'm trying to send a request for a task'")
-        comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
+        comm = server_mailbox.put(Request_For_Task(mailbox), 50)
         this_actor.info("asked for task")
         comm.wait()
         if mailbox.ready:
