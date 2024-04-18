@@ -70,11 +70,12 @@ def master(*args):
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.mailbox))
       this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox))
-      comm = worker_mailbox.put_async(tasks[0], tasks[0].communication_cost)
-      tasks[0].set_time_pased(time.time())
-      sent_tasks.append(tasks[0])
-      pending_comms.append(comm)
+      task = tasks[0]
       tasks.remove(tasks[0])
+      comm = worker_mailbox.put_async(task, task.communication_cost)
+      #tasks[0].set_time_pased(time.time())
+      #sent_tasks.append(tasks[0])
+      
 
     #check if task sent is done or has waited to long
     #if(len(sent_tasks) > 0): # async?
@@ -91,13 +92,8 @@ def master(*args):
       worker_mailbox = Mailbox.by_name(str(data.mailbox))
       this_actor.info("sending stop to:" + str(data.mailbox))
       comm = worker_mailbox.put_async(-1, 1)
-      pending_comms.append(comm)
+      comm.wait()
 
-
-  this_actor.info("all taskes done?")
-
-  for comm in pending_comms:
-    comm.wait()
 
   this_actor.info("all taskes done")
 # master-end
