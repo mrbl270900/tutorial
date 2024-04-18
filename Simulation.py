@@ -96,13 +96,15 @@ def worker(*args):
       this_actor.info("I'm trying to send a request for a task'")
       comm = server_mailbox.put(Request_For_Task(mailbox), 50)
       this_actor.info("asked for task")
-        
+      this_actor.info(str(mailbox.ready))
       if mailbox.ready:
         task = mailbox.get()
+        task = task.get()
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
-          this_actor.execute(task.computing_cost)
-          #add task done code here
+          task_exe = this_actor.execute(task.computing_cost)
+          task_exe.wait()
+          
         else: # Stop when receiving an invalid compute_cost
             done = True
             this_actor.info("Exiting now.")
