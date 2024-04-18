@@ -120,23 +120,21 @@ def worker(*args):
         comm = server_mailbox.put_async(Request_For_Task(mailbox), 50)
         this_actor.info("asked for task")
         comm.wait()
+        if mailbox.ready:
+          this_actor.info("task ready")
+          task = mailbox.get()
+          if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+            this_actor.info("running:" + str(task.tasknr))
+            this_actor.execute(task.computing_cost)
+            #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
+          else: # Stop when receiving an invalid compute_cost
+            done = True
+            this_actor.info("Exiting now.")
+
         #else:
             #this_actor.info("The server mailbox is not ready yet")
     except Exception as e:
         this_actor.info(f"An error occurred while putting async task: {e}")
-
-    
-    this_actor.info("waiting for task")
-    if mailbox.ready:
-      this_actor.info("task ready")
-      task = mailbox.get()
-      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-        this_actor.info("running:" + str(task.tasknr))
-        this_actor.execute(task.computing_cost)
-        #server_mailbox.put_async(Request_With_Task_Done(mailbox, task))
-      else: # Stop when receiving an invalid compute_cost
-        done = True
-        this_actor.info("Exiting now.")
 
 #worker-end
 
