@@ -7,7 +7,7 @@
 # Take this tutorial online: https://simgrid.org/doc/latest/Tutorial_Algorithms.html
 # ##################################################################################
 
-from simgrid import Actor, Engine, Host, Mailbox, this_actor
+from simgrid import Actor, Engine, Host, Mailbox, this_actor, ActivitySet
 import time
 import sys
 
@@ -46,6 +46,8 @@ def master(*args):
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
 
+  pending_comms = ActivitySet()
+
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
@@ -65,8 +67,7 @@ def master(*args):
         this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox))
         task = tasks[0]
         tasks.remove(tasks[0])
-        comm = worker_mailbox.put_async(task, task.communication_cost)
-        comm.wait()
+        pending_comms.push(worker_mailbox.put_async(task, task.communication_cost))
 
       if(len(tasks) < 1 and len(sent_tasks) < 1):
         this_actor.info("mailbox ready")
@@ -74,7 +75,7 @@ def master(*args):
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox))
         this_actor.info("sending stop to:" + str(data.mailbox))
-        comm = worker_mailbox.put_async(-1, 1)
+        pending_comms.push(worker_mailbox.put_async(-1, 1))
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
 
@@ -89,26 +90,33 @@ def worker(*args):
   testVariable = str(this_actor.get_host().name)
   mailbox = Mailbox.by_name(testVariable)
   mailbox.set_receiver(Actor.self())
+  pending_comms = ActivitySet()
   this_actor.info("worker mail box done")
   server_mailbox = Mailbox.by_name("Server")
   this_actor.info("server mail box done")
   done = False
+  not_asked_for_task = True
   while not done:
     try:
-      this_actor.info("I'm trying to send a request for a task'")
-      comm = server_mailbox.put(Request_For_Task(mailbox), 50)
-      this_actor.info("asked for task")
-      this_actor.info(str(mailbox.get()))
-      task = mailbox.get()
-      this_actor.info("task got")
-      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-        this_actor.info("running:" + str(task.tasknr))
-        task_exe = this_actor.execute(task.computing_cost)
-        task_exe.wait()
+      if not_asked_for_task:
+        this_actor.info("I'm trying to send a request for a task'")
+        not_asked_for_task = False
+        pending_comms.push(server_mailbox.put_async(Request_For_Task(mailbox), 50))
+        this_actor.info("asked for task")
+      elif mailbox.ready:
+        task = mailbox.get()
+        this_actor.info("task got")
+        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+          this_actor.info("running:" + str(task.tasknr))
+          task_exe = this_actor.execute_async(task.computing_cost)
+          task_exe.wait()
+          not_asked_for_task = True
           
-      else: # Stop when receiving an invalid compute_cost
-          done = True
-          this_actor.info("Exiting now.")
+        else: # Stop when receiving an invalid compute_cost
+            done = True
+            this_actor.info("Exiting now.")
+      else:
+         this_actor.sleep_for(0.01)
     except Exception as e:
         this_actor.info(f"An error occurred in worker: {e}")
 
