@@ -56,25 +56,27 @@ def master(*args):
   this_actor.info("tasks preprosesed")
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
-    if len(tasks) > 0:
-      this_actor.info("mailbox ready")
-      data = server_mailbox.get()
-      this_actor.info(str(data))
-      worker_mailbox = Mailbox.by_name(str(data.mailbox))
-      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox))
-      task = tasks[0]
-      tasks.remove(tasks[0])
-      comm = worker_mailbox.put_async(task, task.communication_cost)
-      comm.wait()
+    try:
+      if len(tasks) > 0:
+        this_actor.info("mailbox ready")
+        data = server_mailbox.get()
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name(str(data.mailbox))
+        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox))
+        task = tasks[0]
+        tasks.remove(tasks[0])
+        comm = worker_mailbox.put_async(task, task.communication_cost)
+        comm.wait()
 
-    if(len(tasks) < 1 and len(sent_tasks) < 1):
-      this_actor.info("mailbox ready")
-      data = server_mailbox.get()
-      this_actor.info(str(data))
-      worker_mailbox = Mailbox.by_name(str(data.mailbox))
-      this_actor.info("sending stop to:" + str(data.mailbox))
-      comm = worker_mailbox.put_async(-1, 1)
-
+      if(len(tasks) < 1 and len(sent_tasks) < 1):
+        this_actor.info("mailbox ready")
+        data = server_mailbox.get()
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name(str(data.mailbox))
+        this_actor.info("sending stop to:" + str(data.mailbox))
+        comm = worker_mailbox.put_async(-1, 1)
+    except Exception as e:
+        this_actor.info(f"An error occurred in server: {e}")
 
   this_actor.info("all taskes done")
 # master-end
@@ -108,7 +110,7 @@ def worker(*args):
           done = True
           this_actor.info("Exiting now.")
     except Exception as e:
-        this_actor.info(f"An error occurred while putting async task: {e}")
+        this_actor.info(f"An error occurred in worker: {e}")
 
 #worker-end
 
