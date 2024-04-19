@@ -103,7 +103,6 @@ def worker(*args):
         not_asked_for_task = False
         pending_comms.push(server_mailbox.put_async(Request_For_Task(mailbox), 50))
         this_actor.info("asked for task")
-      elif mailbox.ready:
         task = mailbox.get()
         this_actor.info("task got")
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
