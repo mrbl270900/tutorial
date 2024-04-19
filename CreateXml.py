@@ -133,10 +133,10 @@ for x in range(0, amount_workers):
         f.write(statefile_string)
     
 
-link = ET.SubElement(zone, "link")
-link.set('id', '0')
-link.set('bandwidth', '100MBps')
-link.set('latency', '59.904us')
+#link = ET.SubElement(zone, "link")
+#link.set('id', '0')
+#link.set('bandwidth', '100MBps')
+#link.set('latency', '59.904us')
 #link.set('bandwidth_file', 'bandwidth.txt' )
 
 for x in range(0, amount_workers):
@@ -150,11 +150,11 @@ for x in range(0, amount_workers):
     with open(bandWidthFile, 'w') as f: 
         f.write(bandWidthFile_string)
 
-route = ET.SubElement(zone, "route")
-route.set('src', 'Server')
-route.set('dst', 'Server')
-link_ctn1 = ET.SubElement(route, "link_ctn")
-link_ctn1.set('id', '0')
+#route = ET.SubElement(zone, "route")
+#route.set('src', 'Server')
+#route.set('dst', 'Server')
+#link_ctn1 = ET.SubElement(route, "link_ctn")
+#link_ctn1.set('id', '0')
 for x in range(0, amount_workers):
     route = ET.SubElement(zone, "route")
     route.set('src', 'Server')

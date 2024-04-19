@@ -13,7 +13,6 @@
     <host id="Worker7" speed="4215.0Mf" speed_file="speed-files/Worker7-speed_file.txt" state_file="state-files/Worker7-state_file.txt"/>
     <host id="Worker8" speed="4215.0Mf" speed_file="speed-files/Worker8-speed_file.txt" state_file="state-files/Worker8-state_file.txt"/>
     <host id="Worker9" speed="4215.0Mf" speed_file="speed-files/Worker9-speed_file.txt" state_file="state-files/Worker9-state_file.txt"/>
-    <link id="0" bandwidth="100MBps" latency="59.904us"/>
     <link id="1" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link1-bandWidth_file.txt"/>
     <link id="2" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link2-bandWidth_file.txt"/>
     <link id="3" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link3-bandWidth_file.txt"/>
@@ -24,9 +23,6 @@
     <link id="8" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link8-bandWidth_file.txt"/>
     <link id="9" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link9-bandWidth_file.txt"/>
     <link id="10" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link10-bandWidth_file.txt"/>
-    <route src="Server" dst="Server">
-      <link_ctn id="0"/>
-    </route>
     <route src="Server" dst="Worker0">
       <link_ctn id="1"/>
     </route>
