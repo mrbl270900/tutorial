@@ -66,13 +66,13 @@ def master(*args):
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_async(task, task.communication_cost)
 
-    if(len(tasks) < 1 and len(sent_tasks) < 1):
-      this_actor.info("mailbox ready")
-      data = server_mailbox.get()
-      this_actor.info(str(data))
-      worker_mailbox = Mailbox.by_name(str(data.mailbox))
-      this_actor.info("sending stop to:" + str(data.mailbox))
-      comm = worker_mailbox.put_async(-1, 1)
+    #if(len(tasks) < 1 and len(sent_tasks) < 1):
+      #this_actor.info("mailbox ready")
+      #data = server_mailbox.get()
+      #this_actor.info(str(data))
+      #worker_mailbox = Mailbox.by_name(str(data.mailbox))
+      #this_actor.info("sending stop to:" + str(data.mailbox))
+      #comm = worker_mailbox.put_async(-1, 1)
 
 
   this_actor.info("all taskes done")
