@@ -98,10 +98,11 @@ def worker(*args):
       this_actor.info(str(mailbox.get()))
       task = mailbox.get_async()
       this_actor.info("task got")
-      task = task.get()
-      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-        this_actor.info("running:" + str(task.tasknr))
-        task_exe = this_actor.execute(task.computing_cost)
+      task.wait()
+      data = task.get()
+      if data.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        this_actor.info("running:" + str(data.tasknr))
+        task_exe = this_actor.execute(data.computing_cost)
         task_exe.wait()
           
       else: # Stop when receiving an invalid compute_cost
