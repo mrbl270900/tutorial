@@ -65,14 +65,15 @@ def master(*args):
       task = tasks[0]
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_async(task, task.communication_cost)
+      comm.wait()
 
-    #if(len(tasks) < 1 and len(sent_tasks) < 1):
-      #this_actor.info("mailbox ready")
-      #data = server_mailbox.get()
-      #this_actor.info(str(data))
-      #worker_mailbox = Mailbox.by_name(str(data.mailbox))
-      #this_actor.info("sending stop to:" + str(data.mailbox))
-      #comm = worker_mailbox.put_async(-1, 1)
+    if(len(tasks) < 1 and len(sent_tasks) < 1):
+      this_actor.info("mailbox ready")
+      data = server_mailbox.get()
+      this_actor.info(str(data))
+      worker_mailbox = Mailbox.by_name(str(data.mailbox))
+      this_actor.info("sending stop to:" + str(data.mailbox))
+      comm = worker_mailbox.put_async(-1, 1)
 
 
   this_actor.info("all taskes done")
@@ -96,13 +97,11 @@ def worker(*args):
       comm = server_mailbox.put(Request_For_Task(mailbox), 50)
       this_actor.info("asked for task")
       this_actor.info(str(mailbox.get()))
-      task = mailbox.get_async()
+      task = mailbox.get()
       this_actor.info("task got")
-      task.wait()
-      data = task.get()
-      if data.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-        this_actor.info("running:" + str(data.tasknr))
-        task_exe = this_actor.execute(data.computing_cost)
+      if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        this_actor.info("running:" + str(task.tasknr))
+        task_exe = this_actor.execute(task.computing_cost)
         task_exe.wait()
           
       else: # Stop when receiving an invalid compute_cost
