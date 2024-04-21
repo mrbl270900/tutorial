@@ -45,8 +45,6 @@ def master(*args):
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
 
-  sent_tasks.append("1")
-
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
@@ -58,19 +56,31 @@ def master(*args):
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
-      if len(tasks) > 0:
+      if len(tasks) > 0 and len(sent_tasks) > 0:
         this_actor.info("mailbox ready")
-        data = server_mailbox.get_async()
-        data.wait_for(2)
-        this_actor.info(str(data))
+        comm = server_mailbox.get_async()
+        comm.wait_for(2)
+        this_actor.info(str(comm))
         worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
-        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
-        task = tasks[0]
-        tasks.remove(tasks[0])
-        comm = worker_mailbox.put_init(task, task.communication_cost)
-        comm.detach()
-      
-      if len(sent_tasks) > 0 and len(tasks) == 0:
+        data = comm.get_payload
+        if data.task == None:
+          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
+          task = tasks[0]
+          sent_tasks.append(task)
+          tasks.remove(tasks[0])
+          comm = worker_mailbox.put_init(task, task.communication_cost)
+          comm.detach()
+        else:
+          sent_tasks.remove(data.task)
+          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
+          task = tasks[0]
+          sent_tasks.append(task)
+          tasks.remove(tasks[0])
+          comm = worker_mailbox.put_init(task, task.communication_cost)
+          comm.detach()
+          
+
+      else:
         data = server_mailbox.get_async()
         data.wait_for(2)
         this_actor.info(str(data))
@@ -78,7 +88,6 @@ def master(*args):
         this_actor.info("sending stop to:" + str(data.sender.host)[5:-1])
         comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
         comm.detach()
-      
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
@@ -119,7 +128,10 @@ def worker(*args):
           this_actor.execute(task.computing_cost)
           not_asked_for_task = True
           this_actor.info("done with task:" + str(task.tasknr))
-          #add code for done task to server here
+          this_actor.info("I'm trying to send a request for a task'")
+          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
+          comm.detach()
+          this_actor.info("asked for task")
           
         else: # Stop when receiving an invalid compute_cost
           done = True
