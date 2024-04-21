@@ -114,6 +114,7 @@ def worker(*args):
           this_actor.info("Exiting now.")
 
     except Exception as e:
+        not_asked_for_task = True
         this_actor.info(f"An error occurred in worker: {e}")
 
 #worker-end
