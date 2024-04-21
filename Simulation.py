@@ -60,7 +60,9 @@ def master(*args):
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
       this_actor.info("mailbox ready")
-      data = server_mailbox.get()
+      data = server_mailbox.get_async()
+      data.wait_for(2)
+      data.get()
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
       this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
