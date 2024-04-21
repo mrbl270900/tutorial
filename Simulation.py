@@ -63,7 +63,7 @@ def master(*args):
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload()
         this_actor.info(str(data))
-        if data != Request_For_Task:
+        if type(data) != Request_For_Task:
           sent_tasks.remove(data.task)
           this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
           task = tasks[0]
