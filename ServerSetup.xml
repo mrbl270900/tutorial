@@ -1,9 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE platform SYSTEM "https://simgrid.org/simgrid.dtd">
 <platform version="4.1">
-  <config>
-    <prop id="host/model" value="ptask_L07"/>
-  </config>
   <actor host="Server" function="master">
     <argument value="1000"/>
     <argument value="25000000000"/>

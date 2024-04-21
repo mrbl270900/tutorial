@@ -1,6 +1,9 @@
 <?xml version='1.0'?>
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
+  <config>
+    <prop id="host/model" value="ptask_L07"/>
+  </config>
   <zone id="zone0" routing="Full">
     <host id="Server" speed="980950.0Mf"/>
     <host id="Worker0" speed="4215.0Mf" speed_file="speed-files/Worker0-speed_file.txt" state_file="state-files/Worker0-state_file.txt"/>
