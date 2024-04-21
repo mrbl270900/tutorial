@@ -123,7 +123,6 @@ def worker(*args):
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
-          not_asked_for_task = True
           this_actor.info("done with task:" + str(task.tasknr))
           this_actor.info("I'm trying to send a request for a task'")
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
