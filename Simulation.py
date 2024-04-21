@@ -111,7 +111,7 @@ def master(*args):
         comm.wait_for(5)
 
       elif len(tasks) == 0 and len(sent_tasks) == 1:
-        sent_tasks = None
+        sent_tasks = []
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
