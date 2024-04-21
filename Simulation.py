@@ -40,13 +40,10 @@ def master(*args):
   tasks_count = int(args[0])
   compute_cost = int(args[1])
   communicate_cost = int(args[2])
-  pending_comms = []
   tasks = []
   sent_tasks = []
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
-
-  pending_comms = ActivitySet()
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -61,6 +58,7 @@ def master(*args):
     try:
       this_actor.info("mailbox ready")
       data = server_mailbox.get_async()
+      data.wait()
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
       this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
