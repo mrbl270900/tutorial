@@ -58,7 +58,7 @@ def master(*args):
     try:
       this_actor.info("mailbox ready")
       data = server_mailbox.get_async()
-      data.wait()
+      data.wait_for(2)
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
       this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
