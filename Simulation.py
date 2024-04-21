@@ -151,6 +151,7 @@ def worker(*args):
         this_actor.info("task got: " + str(task))
 
         if task == "wait":
+          not_asked_for_task = True
           this_actor.sleep_for(5)
 
         elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
