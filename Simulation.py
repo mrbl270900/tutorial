@@ -57,14 +57,14 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0 or len(sent_tasks) > 0:
+  while len(tasks) > 0:
     try:
       this_actor.info("mailbox ready")
       data = server_mailbox.get_async()
       data.wait_for(2)
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.sender)[8:-1])
-      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender)[8:-1])
+      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.name)[8:-1])
       task = tasks[0]
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_init(task, task.communication_cost)
