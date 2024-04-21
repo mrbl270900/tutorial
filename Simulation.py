@@ -18,9 +18,9 @@ class Task:
     self.computing_cost = computing_cost
     self.communication_cost = communication_cost
     self.time_pased = 0
-    self.time_started = time_started if time_started is not None else time.time()
+    self.time_started = time_started if time_started is not None else e.clock
   def set_time_pased(self):
-    self.time_pased = time.time() - self.time_started
+    self.time_pased = e.clock - self.time_started
 
 
 class Request_For_Task: #can add data about node here
