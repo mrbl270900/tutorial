@@ -32,6 +32,10 @@ class Request_With_Task_Done:
       self.mailbox = mailbox
       self.task = task # as the class task
 
+class Time:
+  def get_time(self):
+    return e.clock
+
 
 
 # master-begin
@@ -44,7 +48,7 @@ def master(*args):
   sent_tasks = []
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
-  last_run_sent_tasks_check = e.clock
+  last_run_sent_tasks_check = Time.get_time()
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -59,8 +63,8 @@ def master(*args):
     try:
       get_comm = server_mailbox.get_async()
 
-      if e.clock - last_run_sent_tasks_check > 10:
-        last_run_sent_tasks_check = e.clock
+      if Time.get_time() - last_run_sent_tasks_check > 10:
+        last_run_sent_tasks_check = Time.get_time()
         #check for the tasks that have been issued if not done in 120 secunds
         for task in sent_tasks:
           task.set_time_pased()
