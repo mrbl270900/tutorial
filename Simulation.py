@@ -57,37 +57,29 @@ def master(*args):
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
-      if len(tasks) > 0 or len(sent_tasks) > 0:
-        this_actor.info("mailbox ready")
-        data = server_mailbox.get()
-        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-        this_actor.info(str(data))
-        if last_request != data:
-          if len(tasks) > 0 and type(data) == Request_For_Task:
-            this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
-            task = tasks[0]
-            sent_tasks.append(task)
-            tasks.remove(tasks[0])
-            comm = worker_mailbox.put_init(task, task.communication_cost)
-            comm.wait_for(5)
-            last_request = data
-          elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
-            sent_tasks.remove(data.task)
-            task = tasks[0]
-            this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-            sent_tasks.append(task)
-            tasks.remove(tasks[0])
-            comm = worker_mailbox.put_init(task, task.communication_cost)
-            comm.wait_for(5)
-            last_request = data
-          else:
-            data = server_mailbox.get()
-            this_actor.info(str(data))
-            worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-            this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-            comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
-            comm.detach()
-      else: #end workers
+      this_actor.info("mailbox ready")
+      data = server_mailbox.get()
+      worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+      this_actor.info(str(data))
+      
+      if len(tasks) > 0 and type(data) == Request_For_Task:
+        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
+        task = tasks[0]
+        sent_tasks.append(task)
+        tasks.remove(tasks[0])
+        comm = worker_mailbox.put_init(task, task.communication_cost)
+        comm.wait_for(5)
+
+      elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
+        sent_tasks.remove(data.task)
+        task = tasks[0]
+        this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+        sent_tasks.append(task)
+        tasks.remove(tasks[0])
+        comm = worker_mailbox.put_init(task, task.communication_cost)
+        comm.wait_for(5)
+
+      else:
         data = server_mailbox.get()
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
