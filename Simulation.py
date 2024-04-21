@@ -61,7 +61,7 @@ def master(*args):
       data = server_mailbox.get()
       worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
       this_actor.info(str(data))
-      
+
       if len(tasks) > 0 and type(data) == Request_For_Task:
         this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
         task = tasks[0]
@@ -84,8 +84,7 @@ def master(*args):
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-        comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
-        comm.detach()
+        comm = worker_mailbox.put(Task(-1, -1, -1), 50)
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
