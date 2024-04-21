@@ -18,9 +18,12 @@ class Task:
     self.computing_cost = computing_cost
     self.communication_cost = communication_cost
     self.time_pased = 0
-    self.time_started = time_started if time_started is not None else e.clock
+    self.time_started = time_started
   def set_time_pased(self):
     self.time_pased = e.clock - self.time_started
+  def set_time_started(self):
+    self.time_started = e.clock
+
 
 
 class Request_For_Task: #can add data about node here
@@ -81,6 +84,7 @@ def master(*args):
         this_actor.info(str(data))
         this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
         task = tasks[0]
+        task.set_time_started()
         sent_tasks.append(task)
         tasks.remove(tasks[0])
         comm = worker_mailbox.put_init(task, task.communication_cost)
@@ -91,6 +95,7 @@ def master(*args):
         this_actor.info(str(data))
         sent_tasks.remove(data.task)
         task = tasks[0]
+        task.set_time_started()
         this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
         sent_tasks.append(task)
         tasks.remove(tasks[0])
