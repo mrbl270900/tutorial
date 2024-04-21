@@ -59,11 +59,11 @@ def master(*args):
     try:
       get_comm = server_mailbox.get_async()
 
-      #check for the tasks that have been issued if not done in 60 seccunds
+      #check for the tasks that have been issued if not done in 120 secunds
       for task in sent_tasks:
         task.set_time_pased()
         this_actor.info(str(task.time_pased))
-        if task.time_pased > 59:
+        if task.time_pased > 119:
           this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
           tasks.append(task)
           sent_tasks.remove(task)
