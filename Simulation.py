@@ -59,7 +59,7 @@ def master(*args):
     try:
       if len(tasks) > 0 or len(sent_tasks) > 0:
         this_actor.info("mailbox ready")
-        comm = server_mailbox.get()
+        comm = server_mailbox.get_init()
         comm.wait_for(5)
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload()
@@ -72,7 +72,7 @@ def master(*args):
             sent_tasks.append(task)
             tasks.remove(tasks[0])
             comm = worker_mailbox.put_init(task, task.communication_cost)
-            comm.detach()
+            comm.wait_for(5)
             last_request = data
           else:
             this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
@@ -80,7 +80,7 @@ def master(*args):
             sent_tasks.append(task)
             tasks.remove(tasks[0])
             comm = worker_mailbox.put_init(task, task.communication_cost)
-            comm.detach()
+            comm.wait_for(5)
             last_request = data
       else: #end workers
         data = server_mailbox.get()
@@ -121,7 +121,7 @@ def worker(*args):
         
       else:
         this_actor.info("getting task")
-        comm = mailbox.get()
+        comm = mailbox.get_init()
         comm.wait_for(5)
         task = comm.get_payload()
         this_actor.info("task got" + str(task))
