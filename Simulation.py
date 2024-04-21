@@ -64,7 +64,7 @@ def master(*args):
         data = server_mailbox.get()
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox))
+        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
         task = tasks[0]
         tasks.remove(tasks[0])
         pending_comms.push(worker_mailbox.put_async(task, task.communication_cost))
@@ -73,7 +73,7 @@ def master(*args):
         this_actor.info("mailbox ready")
         data = server_mailbox.get()
         this_actor.info(str(data))
-        worker_mailbox = Mailbox.by_name(str(data.mailbox))
+        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox))
         pending_comms.push(worker_mailbox.put_async(-1, 1))
     except Exception as e:
@@ -110,8 +110,7 @@ def worker(*args):
         this_actor.info("task got")
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
-          task_exe = this_actor.execute_async(task.computing_cost)
-          task_exe.wait()
+          task_exe = this_actor.execute(task.computing_cost)
           not_asked_for_task = True
           
         else: # Stop when receiving an invalid compute_cost
