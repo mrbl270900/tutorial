@@ -61,7 +61,7 @@ def master(*args):
         comm = server_mailbox.get_async()
         comm.wait_for(2)
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
-        data = comm.get_payload
+        data = comm.get_payload()
         this_actor.info(str(data))
         if data.task != None:
           sent_tasks.remove(data.task)
