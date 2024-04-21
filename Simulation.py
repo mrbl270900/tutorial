@@ -99,7 +99,7 @@ def worker(*args):
     try:
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task'")
-        comm = server_mailbox.put_init(Request_For_Task(mailbox), 50)
+        comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
         comm.detach()
         not_asked_for_task = False
         this_actor.info("asked for task")
@@ -117,7 +117,7 @@ def worker(*args):
         else: # Stop when receiving an invalid compute_cost
           done = True
           this_actor.info("Exiting now.")
-          
+
     except Exception as e:
         this_actor.info(f"An error occurred in worker: {e}")
 
