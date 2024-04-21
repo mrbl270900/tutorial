@@ -80,6 +80,7 @@ def master(*args):
         comm.wait_for(5)
 
       else:
+        this_actor.info(str(sent_tasks))
         data = server_mailbox.get()
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -114,17 +115,16 @@ def worker(*args):
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
         comm.wait_for(5)
         not_asked_for_task = False
-        this_actor.info("asked for task")
         
       else:
         this_actor.info("getting task")
         task = mailbox.get()
         this_actor.info("task got" + str(task))
+
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
           this_actor.info("done with task:" + str(task.tasknr))
-          this_actor.info("I'm trying to send a request for a task'")
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
           comm.wait_for(5)
           this_actor.info("asked for task")
