@@ -110,8 +110,10 @@ def worker(*args):
         this_actor.info("task got")
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
-          task_exe = this_actor.execute(task.computing_cost)
+          this_actor.execute(task.computing_cost)
           not_asked_for_task = True
+          this_actor.info("done with task:" + str(task.tasknr))
+          #add code for done task to server here
           
         else: # Stop when receiving an invalid compute_cost
           done = True
