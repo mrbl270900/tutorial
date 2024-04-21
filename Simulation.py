@@ -105,7 +105,7 @@ def worker(*args):
         this_actor.info("asked for task")
         
       else:
-        this_actor.info(mailbox.ready)
+        this_actor.info(str(mailbox.ready))
         if mailbox.ready:
           this_actor.info("getting task")
           task = mailbox.get()
