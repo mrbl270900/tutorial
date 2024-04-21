@@ -60,7 +60,7 @@ def master(*args):
       if len(tasks) > 0 or len(sent_tasks) > 0:
         this_actor.info("mailbox ready")
         comm = server_mailbox.get_async()
-        comm.wait_for(2)
+        comm.wait_for(5)
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload()
         this_actor.info(str(data))
