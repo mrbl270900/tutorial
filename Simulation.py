@@ -90,7 +90,6 @@ def worker(*args):
   testVariable = str(this_actor.get_host().name)
   mailbox = Mailbox.by_name(testVariable)
   mailbox.set_receiver(Actor.self())
-  pending_comms = ActivitySet()
   this_actor.info("worker mail box done")
   server_mailbox = Mailbox.by_name("Server")
   this_actor.info("server mail box done")
@@ -100,12 +99,13 @@ def worker(*args):
     try:
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task'")
-        not_asked_for_task = False
         comm = server_mailbox.put_init(Request_For_Task(mailbox), 50)
         comm.detach()
+        not_asked_for_task = False
         this_actor.info("asked for task")
         
       else:
+        this_actor.info(mailbox.ready)
         if mailbox.ready:
           this_actor.info("getting task")
           task = mailbox.get()
