@@ -101,6 +101,7 @@ def master(*args):
       for task in sent_tasks:
         task.set_time_pased()
         if task.time_pased > 59:
+          this_actor.info(task.tasknr + " removing from sent and adding to tasks")
           tasks.append(task)
           sent_tasks.remove(task)
 
@@ -135,7 +136,7 @@ def worker(*args):
       else:
         this_actor.info("getting task")
         task = mailbox.get()
-        this_actor.info("task got" + str(task))
+        this_actor.info("task got: " + str(task))
 
         if task == "wait":
           this_actor.sleep_for(5)
