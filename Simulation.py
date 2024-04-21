@@ -7,7 +7,7 @@
 # Take this tutorial online: https://simgrid.org/doc/latest/Tutorial_Algorithms.html
 # ##################################################################################
 
-from simgrid import Actor, Engine, Host, Mailbox, this_actor, ActivitySet
+from simgrid import Actor, Engine, Mailbox, this_actor
 import time
 import sys
 
@@ -62,8 +62,9 @@ def master(*args):
       #check for the tasks that have been issued if not done in 60 seccunds
       for task in sent_tasks:
         task.set_time_pased()
+        this_actor.info(str(task.time_pased))
         if task.time_pased > 59:
-          this_actor.info(task.tasknr + " removing from sent and adding to tasks")
+          this_actor.info(str(task) + " removing from sent and adding to tasks")
           tasks.append(task)
           sent_tasks.remove(task)
 
