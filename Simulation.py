@@ -59,23 +59,15 @@ def master(*args):
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
-      if len(tasks) > 0:
-        this_actor.info("mailbox ready")
-        data = server_mailbox.get()
-        this_actor.info(str(data))
-        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
-        task = tasks[0]
-        tasks.remove(tasks[0])
-        pending_comms.push(worker_mailbox.put_async(task, task.communication_cost))
+      this_actor.info("mailbox ready")
+      data = server_mailbox.get()
+      this_actor.info(str(data))
+      worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
+      task = tasks[0]
+      tasks.remove(tasks[0])
+      pending_comms.push(worker_mailbox.put_async(task, task.communication_cost))
 
-      if(len(tasks) < 1 and len(sent_tasks) < 1):
-        this_actor.info("mailbox ready")
-        data = server_mailbox.get()
-        this_actor.info(str(data))
-        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-        this_actor.info("sending stop to:" + str(data.mailbox))
-        pending_comms.push(worker_mailbox.put_async(-1, 1))
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
 
