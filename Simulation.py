@@ -101,21 +101,26 @@ def worker(*args):
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task'")
         not_asked_for_task = False
-        pending_comms.push(server_mailbox.put_async(Request_For_Task(mailbox), 50))
+        comm = server_mailbox.put_init(Request_For_Task(mailbox), 50)
+        comm.detach()
         this_actor.info("asked for task")
-        task = mailbox.get()
-        this_actor.info("task got")
-        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-          this_actor.info("running:" + str(task.tasknr))
-          task_exe = this_actor.execute_async(task.computing_cost)
-          task_exe.wait()
-          not_asked_for_task = True
+        
+      else:
+        if mailbox.ready:
+          this_actor.info("getting task")
+          task = mailbox.get()
+          this_actor.info("task got")
+          if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+            this_actor.info("running:" + str(task.tasknr))
+            task_exe = this_actor.execute_async(task.computing_cost)
+            task_exe.wait()
+            not_asked_for_task = True
           
-        else: # Stop when receiving an invalid compute_cost
+          else: # Stop when receiving an invalid compute_cost
             done = True
             this_actor.info("Exiting now.")
-      else:
-         this_actor.sleep_for(0.01)
+        else:
+          this_actor.sleep_for(0.01)
     except Exception as e:
         this_actor.info(f"An error occurred in worker: {e}")
 
