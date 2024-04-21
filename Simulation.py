@@ -33,7 +33,7 @@ class Request_With_Task_Done:
       self.task = task # as the class task
 
 class Time:
-  def get_time(self):
+  def get_time():
     return e.clock
 
 
