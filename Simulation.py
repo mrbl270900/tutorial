@@ -70,7 +70,7 @@ def master(*args):
         comm = worker_mailbox.put_init(task, task.communication_cost)
         comm.detach()
       
-      if sent_tasks > 0 and len(tasks) == 0:
+      if len(sent_tasks) > 0 and len(tasks) == 0:
         data = server_mailbox.get_async()
         data.wait_for(2)
         this_actor.info(str(data))
