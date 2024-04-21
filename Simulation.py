@@ -44,7 +44,7 @@ def master(*args):
   sent_tasks = []
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
-  last_request = ""
+  last_run_sent_tasks_check = e.clock
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -59,14 +59,15 @@ def master(*args):
     try:
       get_comm = server_mailbox.get_async()
 
-      #check for the tasks that have been issued if not done in 120 secunds
-      for task in sent_tasks:
-        task.set_time_pased()
-        this_actor.info(str(task.time_pased))
-        if task.time_pased > 119:
-          this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
-          tasks.append(task)
-          sent_tasks.remove(task)
+      if e.clock - last_run_sent_tasks_check > 10:
+        last_run_sent_tasks_check = e.clock
+        #check for the tasks that have been issued if not done in 120 secunds
+        for task in sent_tasks:
+          task.set_time_pased()
+          if task.time_pased > 119:
+            this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
+            tasks.append(task)
+            sent_tasks.remove(task)
 
       get_comm.wait_for(1)
       data = get_comm.get_payload()
