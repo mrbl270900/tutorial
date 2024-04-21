@@ -73,6 +73,7 @@ def master(*args):
           task.set_time_pased()
           if task.time_pased > 59:
             this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
+            this_actor.info(str(sent_tasks))#debug
             tasks.append(task)
             sent_tasks.remove(task)
 
