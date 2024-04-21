@@ -83,7 +83,6 @@ def master(*args):
             last_request = data
       else: #end workers
         data = server_mailbox.get()
-        data.wait_for(5)
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
         this_actor.info("sending stop to:" + str(data.sender.host)[5:-1])
