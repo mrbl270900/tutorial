@@ -68,7 +68,7 @@ def master(*args):
           sent_tasks.remove(task)
 
       get_comm.wait_for(1)
-      data = comm.get_payload()
+      data = get_comm.get_payload()
 
       if len(tasks) > 0 and type(data) == Request_For_Task:
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
