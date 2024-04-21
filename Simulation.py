@@ -60,7 +60,6 @@ def master(*args):
       if len(tasks) > 0 or len(sent_tasks) > 0:
         this_actor.info("mailbox ready")
         comm = server_mailbox.get()
-        comm.wait_for(5)
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload()
         this_actor.info(str(data))
@@ -122,7 +121,6 @@ def worker(*args):
       else:
         this_actor.info("getting task")
         comm = mailbox.get()
-        comm.wait_for(5)
         task = comm.get_payload()
         this_actor.info("task got" + str(task))
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
