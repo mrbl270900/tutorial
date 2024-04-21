@@ -103,7 +103,7 @@ def master(*args):
         comm = worker_mailbox.put_init(task, task.communication_cost)
         comm.wait_for(5)
 
-      elif len(tasks) == 0 and len(sent_tasks) > 0:
+      elif len(tasks) == 0 and len(sent_tasks) > 1:
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info(str(data))
         this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
