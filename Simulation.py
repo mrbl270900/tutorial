@@ -58,11 +58,13 @@ def master(*args):
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
       this_actor.info("mailbox ready")
-      data = server_mailbox.get()
-      worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-      this_actor.info(str(data))
+      comm = server_mailbox.get_async()
+      comm.wait_for(5)
+      data = comm.get_payload()
 
       if len(tasks) > 0 and type(data) == Request_For_Task:
+        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+        this_actor.info(str(data))
         this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
         task = tasks[0]
         sent_tasks.append(task)
@@ -71,6 +73,8 @@ def master(*args):
         comm.wait_for(5)
 
       elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
+        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+        this_actor.info(str(data))
         sent_tasks.remove(data.task)
         task = tasks[0]
         this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
@@ -80,8 +84,7 @@ def master(*args):
         comm.wait_for(5)
 
       else:
-        this_actor.info(str(sent_tasks))
-        data = server_mailbox.get()
+        this_actor.info(str(sent_tasks))#debug
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
