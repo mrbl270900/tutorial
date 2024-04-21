@@ -101,9 +101,10 @@ def worker(*args):
         
       else:
         this_actor.info("getting task")
-        task = mailbox.get()
+        task = server_mailbox.get_async()
+        task.wait_for(2)
         this_actor.info("task got")
-        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        if task.get().computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
           not_asked_for_task = True
