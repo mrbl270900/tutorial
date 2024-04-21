@@ -17,10 +17,10 @@ class Task:
     self.tasknr = tasknr
     self.computing_cost = computing_cost
     self.communication_cost = communication_cost
-    self.time_pased = time_started
+    self.time_pased = 0
     self.time_started = time_started if time_started is not None else time.time()
-  def set_time_pased(self, time_pased):
-    self.time_pased = time_pased
+  def set_time_pased(self):
+    self.time_pased = time.time() - self.time_started
 
 
 class Request_For_Task: #can add data about node here
@@ -87,6 +87,13 @@ def master(*args):
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
         comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
         comm.wait_for(5)
+
+      #check for the tasks that have been issued if not done in 60 seccunds
+      for task in sent_tasks:
+        task.set_time_pased()
+        if task.time_pased > 59:
+          tasks.append(task)
+          sent_tasks.remove(task)
 
 
     except Exception as e:
