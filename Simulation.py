@@ -101,9 +101,7 @@ def worker(*args):
         
       else:
         this_actor.info("getting task")
-        comm = server_mailbox.get_async()
-        comm.wait_for(2)
-        task = comm.get()
+        task = mailbox.get()
         this_actor.info("task got")
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
