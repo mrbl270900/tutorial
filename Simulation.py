@@ -103,15 +103,21 @@ def master(*args):
         comm.wait_for(5)
 
       elif len(tasks) == 0 and len(sent_tasks) > 0:
-        this_actor.info(str(sent_tasks))#debug
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info(str(data))
         this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
         comm = worker_mailbox.put_init("wait", 50)
         comm.wait_for(5)
 
+      elif len(tasks) == 0 and len(sent_tasks) == 1:
+        sent_tasks.remove(data.task)
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+        this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
+        comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
+        comm.wait_for(5)
+
       else:
-        this_actor.info(str(sent_tasks))#debug
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
