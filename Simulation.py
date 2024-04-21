@@ -44,6 +44,7 @@ def master(*args):
   sent_tasks = []
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
+  last_request = ""
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -63,22 +64,25 @@ def master(*args):
         worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload()
         this_actor.info(str(data))
-        if type(data) != Request_For_Task:
-          sent_tasks.remove(data.task)
-          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
-          task = tasks[0]
-          sent_tasks.append(task)
-          tasks.remove(tasks[0])
-          comm = worker_mailbox.put_init(task, task.communication_cost)
-          comm.detach()
-        else:
-          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
-          task = tasks[0]
-          sent_tasks.append(task)
-          tasks.remove(tasks[0])
-          comm = worker_mailbox.put_init(task, task.communication_cost)
-          comm.detach()
-      else:
+        if last_request != data:
+          if type(data) != Request_For_Task:
+            sent_tasks.remove(data.task)
+            this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
+            task = tasks[0]
+            sent_tasks.append(task)
+            tasks.remove(tasks[0])
+            comm = worker_mailbox.put_init(task, task.communication_cost)
+            comm.detach()
+            last_request = data
+          else:
+            this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
+            task = tasks[0]
+            sent_tasks.append(task)
+            tasks.remove(tasks[0])
+            comm = worker_mailbox.put_init(task, task.communication_cost)
+            comm.detach()
+            last_request = data
+      else: #end workers
         data = server_mailbox.get_async()
         data.wait_for(2)
         this_actor.info(str(data))
@@ -111,14 +115,14 @@ def worker(*args):
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task'")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
-        comm.detach()
+        comm.wait_for(5)
         not_asked_for_task = False
         this_actor.info("asked for task")
         
       else:
         this_actor.info("getting task")
         comm = mailbox.get_async()
-        comm.wait_for(2)
+        comm.wait_for(5)
         task = comm.get_payload()
         this_actor.info("task got" + str(task))
         if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
@@ -128,7 +132,7 @@ def worker(*args):
           this_actor.info("done with task:" + str(task.tasknr))
           this_actor.info("I'm trying to send a request for a task'")
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
-          comm.detach()
+          comm.wait_for(5)
           this_actor.info("asked for task")
           
         else: # Stop when receiving an invalid compute_cost
