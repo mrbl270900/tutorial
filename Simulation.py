@@ -56,7 +56,7 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0 or sent_tasks > 0:
+  while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
       if len(tasks) > 0:
         this_actor.info("mailbox ready")
