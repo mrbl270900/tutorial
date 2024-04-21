@@ -111,7 +111,7 @@ def master(*args):
         comm.wait_for(5)
 
       elif len(tasks) == 0 and len(sent_tasks) == 1:
-        sent_tasks.remove(data.task)
+        sent_tasks = None
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
@@ -147,7 +147,7 @@ def worker(*args):
   while not done:
     try:
       if not_asked_for_task:
-        this_actor.info("I'm trying to send a request for a task'")
+        this_actor.info("I'm trying to send a request for a task")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
         comm.wait_for(5)
         not_asked_for_task = False
