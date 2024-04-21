@@ -61,7 +61,7 @@ def master(*args):
       data.wait()
       this_actor.info(str(data))
       worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.send.mailbox)[8:-1])
+      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
       task = tasks[0]
       tasks.remove(tasks[0])
       comm = worker_mailbox.put_init(task, task.communication_cost)
