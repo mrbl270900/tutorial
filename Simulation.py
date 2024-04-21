@@ -68,10 +68,10 @@ def master(*args):
 
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
-        #check for the tasks that have been issued if not done in 120 secunds
+        #check for the tasks that have been issued if not done in 60 secunds
         for task in sent_tasks:
           task.set_time_pased()
-          if task.time_pased > 119:
+          if task.time_pased > 59:
             this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
             tasks.append(task)
             sent_tasks.remove(task)
@@ -152,7 +152,7 @@ def worker(*args):
 
         if task == "wait":
           not_asked_for_task = True
-          this_actor.sleep_for(5)
+          this_actor.sleep_for(10)
 
         elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
