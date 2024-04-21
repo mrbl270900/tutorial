@@ -72,7 +72,7 @@ def master(*args):
             comm = worker_mailbox.put_init(task, task.communication_cost)
             comm.wait_for(5)
             last_request = data
-          else:
+          elif len(sent_tasks) > 0:
             this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
             task = tasks[0]
             sent_tasks.append(task)
@@ -80,6 +80,13 @@ def master(*args):
             comm = worker_mailbox.put_init(task, task.communication_cost)
             comm.wait_for(5)
             last_request = data
+          else:
+            data = server_mailbox.get()
+            this_actor.info(str(data))
+            worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+            this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
+            comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
+            comm.detach()
       else: #end workers
         data = server_mailbox.get()
         this_actor.info(str(data))
