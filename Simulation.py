@@ -57,9 +57,8 @@ def master(*args):
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
-      this_actor.info("mailbox ready")
       comm = server_mailbox.get_async()
-      comm.wait_for(5)
+      comm.wait_for(1)
       data = comm.get_payload()
 
       if len(tasks) > 0 and type(data) == Request_For_Task:
@@ -81,6 +80,13 @@ def master(*args):
         sent_tasks.append(task)
         tasks.remove(tasks[0])
         comm = worker_mailbox.put_init(task, task.communication_cost)
+        comm.wait_for(5)
+
+      elif len(task) == 0 and len(sent_tasks) > 0:
+        worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+        this_actor.info(str(data))
+        this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
+        comm = worker_mailbox.put_init("wait", 50)
         comm.wait_for(5)
 
       else:
@@ -131,7 +137,10 @@ def worker(*args):
         task = mailbox.get()
         this_actor.info("task got" + str(task))
 
-        if task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        if task == "wait":
+          this_actor.sleep_for(5)
+
+        elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
           this_actor.info("done with task:" + str(task.tasknr))
