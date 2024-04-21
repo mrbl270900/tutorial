@@ -70,7 +70,6 @@ def master(*args):
       comm = worker_mailbox.put_init(task, task.communication_cost)
       comm.detach()
 
-
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
 
