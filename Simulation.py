@@ -84,7 +84,9 @@ def master(*args):
         this_actor.info(str(data))
         worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
         this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-        comm = worker_mailbox.put(Task(-1, -1, -1), 50)
+        comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
+        comm.wait_for(5)
+
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
