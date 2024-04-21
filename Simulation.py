@@ -45,6 +45,8 @@ def master(*args):
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
 
+  sent_tasks.append("1")
+
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
@@ -54,18 +56,29 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0:
+  while len(tasks) > 0 or sent_tasks > 0:
     try:
-      this_actor.info("mailbox ready")
-      data = server_mailbox.get_async()
-      data.wait_for(2)
-      this_actor.info(str(data))
-      worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
-      this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
-      task = tasks[0]
-      tasks.remove(tasks[0])
-      comm = worker_mailbox.put_init(task, task.communication_cost)
-      comm.detach()
+      if len(tasks) > 0:
+        this_actor.info("mailbox ready")
+        data = server_mailbox.get_async()
+        data.wait_for(2)
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
+        this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
+        task = tasks[0]
+        tasks.remove(tasks[0])
+        comm = worker_mailbox.put_init(task, task.communication_cost)
+        comm.detach()
+      
+      if sent_tasks > 0 and len(tasks) == 0:
+        data = server_mailbox.get_async()
+        data.wait_for(2)
+        this_actor.info(str(data))
+        worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
+        this_actor.info("sending stop to:" + str(data.sender.host)[5:-1])
+        comm = worker_mailbox.put_init(Task(-1, -1, -1), 50)
+        comm.detach()
+      
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
