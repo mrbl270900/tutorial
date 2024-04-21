@@ -61,18 +61,18 @@ def master(*args):
         comm = server_mailbox.get_async()
         comm.wait_for(2)
         this_actor.info(str(comm))
-        worker_mailbox = Mailbox.by_name(str(data.sender.host)[5:-1])
+        worker_mailbox = Mailbox.by_name(str(comm.sender.host)[5:-1])
         data = comm.get_payload
         if data.task != None:
           sent_tasks.remove(data.task)
-          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
+          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
           task = tasks[0]
           sent_tasks.append(task)
           tasks.remove(tasks[0])
           comm = worker_mailbox.put_init(task, task.communication_cost)
           comm.detach()
         else:
-          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.sender.host)[5:-1])
+          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(comm.sender.host)[5:-1])
           task = tasks[0]
           sent_tasks.append(task)
           tasks.remove(tasks[0])
