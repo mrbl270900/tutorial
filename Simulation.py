@@ -64,7 +64,7 @@ def master(*args):
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3]), bool(task[4])))
 
-  this_actor.info(str(tasks))# debug
+  this_actor.info(str(task[0]))# debug
   this_actor.info("tasks preprosesed")
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
