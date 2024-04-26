@@ -58,14 +58,13 @@ def master(*args):
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
-  this_actor.info(str(args[3].split(",")))
-
   #make task obj's
   for i in range(0, tasks_count):
      task_count = i + 3
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3]), bool(task[4])))
 
+  this_actor.info(str(tasks))# debug
   this_actor.info("tasks preprosesed")
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
