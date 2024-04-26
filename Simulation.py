@@ -58,7 +58,7 @@ def master(*args):
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
-  this_actor.info(str(args[task_count].split(",")))
+  this_actor.info(str(args[3].split(",")))
 
   #make task obj's
   for i in range(0, tasks_count):
