@@ -13,12 +13,14 @@ import sys
 
 # task obj
 class Task:
-  def __init__(self, tasknr, computing_cost, communication_cost, time_started = None):
+  def __init__(self, tasknr, computing_cost, communication_cost, can_data_split, can_comunication_split, time_started = None):
     self.tasknr = tasknr
     self.computing_cost = computing_cost
     self.communication_cost = communication_cost
     self.time_pased = 0
     self.time_started = time_started
+    self.can_data_split = can_data_split
+    self.can_comunication_split = can_comunication_split
   def set_time_pased(self):
     self.time_pased = e.clock - self.time_started
   def set_time_started(self):
@@ -58,7 +60,9 @@ def master(*args):
 
   #make task obj's
   for i in range(0, tasks_count):
-     tasks.append(Task(i, compute_cost, communicate_cost))
+     task_count = i + 2
+     task = args[task_count].split(",")
+     tasks.append(Task(task[0], task[1], task[2], task[3], task[4]))
 
   this_actor.info("tasks preprosesed")
 
