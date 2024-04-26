@@ -62,7 +62,7 @@ def master(*args):
 
   #make task obj's
   for i in range(0, tasks_count):
-     task_count = i + 2
+     task_count = i + 3
      task = args[task_count].split(",")
      tasks.append(Task(task[0], task[1], task[2], task[3], task[4]))
 
