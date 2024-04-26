@@ -58,6 +58,8 @@ def master(*args):
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
 
+  this_actor.info(str(args[task_count].split(",")))
+
   #make task obj's
   for i in range(0, tasks_count):
      task_count = i + 2
