@@ -64,7 +64,7 @@ def master(*args):
   for i in range(0, tasks_count):
      task_count = i + 3
      task = args[task_count].split(",")
-     tasks.append(Task(task[0], task[1], task[2], task[3], task[4]))
+     tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3]), bool(task[4])))
 
   this_actor.info("tasks preprosesed")
 
@@ -79,7 +79,6 @@ def master(*args):
           task.set_time_pased()
           if task.time_pased > 59:
             this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
-            this_actor.info(str(sent_tasks))#debug
             tasks.append(task)
             sent_tasks.remove(task)
 
