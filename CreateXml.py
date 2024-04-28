@@ -8,10 +8,30 @@ platform.set('version', '4.1')
 
 amount_workers = 10
 
+amount_tasks = 1000
+
+#host: string
+
 class Worker:
   def __init__(self, host):
     self.name = host
 
+#nr: string
+#task_size: int
+#comunication_size: int
+#can_split_data: bool
+#can_split_comunication: bool
+
+class Task:
+    def __init__(self, nr, task_size, comunication_size, can_split_data, can_split_comunication):
+        self.nr = nr
+        self.task_size = task_size
+        self.comunication_size = comunication_size
+        self.can_split_data = can_split_data
+        self.can_split_comunication = can_split_comunication
+
+    def get_string(self):
+        return self.nr + "," + str(self.task_size) + "," + str(self.comunication_size) + "," + str(self.can_split_data) + "," + str(self.can_split_comunication)
 
 #setting up main server node
 actor = ET.SubElement(platform, "actor")
@@ -21,7 +41,7 @@ actor.set('function', 'master')
 
 #setting up tasks to be done/ arguments for main server node
 argument= ET.SubElement(actor, "argument")
-argument.set('value', '1000') # amount of tasks
+argument.set('value', str(amount_tasks)) # amount of tasks
 
 argument = ET.SubElement(actor, "argument")
 argument.set('value', '25000000000') # 25.000 million flop task size should tak around 12 sec for a node 
@@ -30,10 +50,10 @@ argument = ET.SubElement(actor, "argument")
 argument.set('value', '10000000') # is in bits so 10 million bits comunication cost or 10 megabites
 
 #setting op nodes and add arguments to nodes here also
-for x in range(0,amount_workers):
-    temp_worker = Worker("Worker" + str(x))
+for x in range(0,amount_tasks):
+    temp_task = Task(str(x), 25000000000, 10000000, False, False)
     argument = ET.SubElement(actor, "argument")
-    argument.set('value', temp_worker.name)
+    argument.set('value', temp_task.get_string())
 
 for x in range(0,amount_workers):
     temp_worker = Worker("Worker" + str(x))
