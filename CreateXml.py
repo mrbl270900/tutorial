@@ -10,13 +10,17 @@ amount_workers = 10
 
 amount_tasks = 1000
 
+task_avg_prosesing_size = 25000000000
+
+task_avg_comunication_size = 10000000
+
 #host: string
 
 class Worker:
   def __init__(self, host):
     self.name = host
 
-#nr: string
+#nr: int
 #task_size: int
 #comunication_size: int
 #can_split_data: bool
@@ -31,7 +35,7 @@ class Task:
         self.can_split_comunication = can_split_comunication
 
     def get_string(self):
-        return self.nr + "," + str(self.task_size) + "," + str(self.comunication_size) + "," + str(self.can_split_data) + "," + str(self.can_split_comunication)
+        return str(self.nr) + "," + str(self.task_size) + "," + str(self.comunication_size) + "," + str(self.can_split_data) + "," + str(self.can_split_comunication)
 
 #setting up main server node
 actor = ET.SubElement(platform, "actor")
@@ -44,14 +48,14 @@ argument= ET.SubElement(actor, "argument")
 argument.set('value', str(amount_tasks)) # amount of tasks
 
 argument = ET.SubElement(actor, "argument")
-argument.set('value', '25000000000') # 25.000 million flop task size should tak around 12 sec for a node 
+argument.set('value', task_avg_prosesing_size) # 25.000 million flop task size should tak around 12 sec for a node 
 
 argument = ET.SubElement(actor, "argument")
-argument.set('value', '10000000') # is in bits so 10 million bits comunication cost or 10 megabites
+argument.set('value', task_avg_comunication_size) # is in bits so 10 million bits comunication cost or 10 megabites
 
 #setting op nodes and add arguments to nodes here also
 for x in range(0,amount_tasks):
-    temp_task = Task(str(x), 25000000000, 10000000, False, False)
+    temp_task = Task(x, task_avg_prosesing_size, task_avg_comunication_size, False, False)
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 
