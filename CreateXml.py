@@ -65,7 +65,7 @@ task_avg_comunication_size_norm_dist = np.random.normal(task_avg_comunication_si
 
 
 for x in range(0,amount_tasks):
-    temp_task = Task(x, task_avg_prosesing_size_norm_dist[x], task_avg_comunication_size_norm_dist[x], random.choice([True, False]), random.choice([True, False]))
+    temp_task = Task(x, int(task_avg_prosesing_size_norm_dist[x]), int(task_avg_comunication_size_norm_dist[x]), random.choice([True, False]), random.choice([True, False]))
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 
