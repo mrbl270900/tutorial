@@ -2,6 +2,8 @@ import xml.etree.ElementTree as ET
 from lxml import etree
 import random
 import os
+import numpy as np
+
 
 platform = ET.Element('platform')
 platform.set('version', '4.1')
@@ -54,8 +56,16 @@ argument = ET.SubElement(actor, "argument")
 argument.set('value', str(task_avg_comunication_size)) # is in bits so 10 million bits comunication cost or 10 megabites
 
 #setting op nodes and add arguments to nodes here also
+
+Standard_deviation = 5000000000
+task_avg_prosesing_size_norm_dist = np.random.normal(task_avg_prosesing_size, Standard_deviation, amount_tasks)
+
+Standard_deviation = 2000000
+task_avg_comunication_size_norm_dist = np.random.normal(task_avg_comunication_size, Standard_deviation, amount_tasks)
+
+
 for x in range(0,amount_tasks):
-    temp_task = Task(x, task_avg_prosesing_size, task_avg_comunication_size, False, False)
+    temp_task = Task(x, task_avg_prosesing_size_norm_dist[x], task_avg_comunication_size_norm_dist[x], random.choice([True, False]), random.choice([True, False]))
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 
