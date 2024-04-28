@@ -2,17 +2,17 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
   <zone id="zone0" routing="Full">
-    <host id="Server" speed="980950.0Mf"/>
-    <host id="Worker0" speed="4215.0Mf" speed_file="speed-files/Worker0-speed_file.txt" state_file="state-files/Worker0-state_file.txt"/>
-    <host id="Worker1" speed="4215.0Mf" speed_file="speed-files/Worker1-speed_file.txt" state_file="state-files/Worker1-state_file.txt"/>
-    <host id="Worker2" speed="4215.0Mf" speed_file="speed-files/Worker2-speed_file.txt" state_file="state-files/Worker2-state_file.txt"/>
-    <host id="Worker3" speed="4215.0Mf" speed_file="speed-files/Worker3-speed_file.txt" state_file="state-files/Worker3-state_file.txt"/>
-    <host id="Worker4" speed="4215.0Mf" speed_file="speed-files/Worker4-speed_file.txt" state_file="state-files/Worker4-state_file.txt"/>
-    <host id="Worker5" speed="4215.0Mf" speed_file="speed-files/Worker5-speed_file.txt" state_file="state-files/Worker5-state_file.txt"/>
-    <host id="Worker6" speed="4215.0Mf" speed_file="speed-files/Worker6-speed_file.txt" state_file="state-files/Worker6-state_file.txt"/>
-    <host id="Worker7" speed="4215.0Mf" speed_file="speed-files/Worker7-speed_file.txt" state_file="state-files/Worker7-state_file.txt"/>
-    <host id="Worker8" speed="4215.0Mf" speed_file="speed-files/Worker8-speed_file.txt" state_file="state-files/Worker8-state_file.txt"/>
-    <host id="Worker9" speed="4215.0Mf" speed_file="speed-files/Worker9-speed_file.txt" state_file="state-files/Worker9-state_file.txt"/>
+    <host id="Server" speed="980950.0Mf" core="32"/>
+    <host id="Worker0" speed="4,75" core="16.00" speed_file="speed-files/Worker0-speed_file.txt" state_file="state-files/Worker0-state_file.txt"/>
+    <host id="Worker1" speed="5,32" core="23.42" speed_file="speed-files/Worker1-speed_file.txt" state_file="state-files/Worker1-state_file.txt"/>
+    <host id="Worker2" speed="4,75" core="16.00" speed_file="speed-files/Worker2-speed_file.txt" state_file="state-files/Worker2-state_file.txt"/>
+    <host id="Worker3" speed="4,72" core="19.00" speed_file="speed-files/Worker3-speed_file.txt" state_file="state-files/Worker3-state_file.txt"/>
+    <host id="Worker4" speed="4,77" core="12.00" speed_file="speed-files/Worker4-speed_file.txt" state_file="state-files/Worker4-state_file.txt"/>
+    <host id="Worker5" speed="5,58" core="8.00" speed_file="speed-files/Worker5-speed_file.txt" state_file="state-files/Worker5-state_file.txt"/>
+    <host id="Worker6" speed="4,66" core="8.00" speed_file="speed-files/Worker6-speed_file.txt" state_file="state-files/Worker6-state_file.txt"/>
+    <host id="Worker7" speed="5,07" core="16.00" speed_file="speed-files/Worker7-speed_file.txt" state_file="state-files/Worker7-state_file.txt"/>
+    <host id="Worker8" speed="4,87" core="4.00" speed_file="speed-files/Worker8-speed_file.txt" state_file="state-files/Worker8-state_file.txt"/>
+    <host id="Worker9" speed="5,35" core="16.00" speed_file="speed-files/Worker9-speed_file.txt" state_file="state-files/Worker9-state_file.txt"/>
     <link id="0" bandwidth="100MBps" latency="59.904us" bandwidth_file="bandwidth.txt"/>
     <link id="1" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link1-bandWidth_file.txt"/>
     <link id="2" bandwidth="65MBps" latency="9.0ms" bandwidth_file="bandwidth-files/link2-bandWidth_file.txt"/>
