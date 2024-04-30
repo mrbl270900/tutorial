@@ -93,8 +93,6 @@ def master(*args):
             waiting_comms.remove(waiting_comms[0])
             data_ready = True
             break
-          else:
-            this_actor.info(waiting_comm.state_str)
         if not data_ready:
           this_actor.sleep_for(1)
 
@@ -175,7 +173,8 @@ def worker(*args):
         
       else:
         this_actor.info("getting task")
-        comm_get = mailbox.get_async().wait_for(5)
+        comm_get = mailbox.get_async()
+        comm_get.wait_for(5)
         task = comm_get.get_payload()
         this_actor.info("task got: " + str(task))
 
