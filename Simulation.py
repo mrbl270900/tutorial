@@ -143,7 +143,7 @@ def master(*args):
         data_ready = False
 
       else:
-        waiting_comms[0].wait_for(1)
+        this_actor.sleep_for(0.1)
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
