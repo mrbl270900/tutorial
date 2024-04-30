@@ -85,7 +85,7 @@ def master(*args):
 
       if server_mailbox.ready:
         get_comm = server_mailbox.get_async()
-        data = get_comm.get_payload()
+        data = get_comm.get_payload().wait_for(3)
         waiting_comms.remove(get_comm)
         data_ready = True
       else:
