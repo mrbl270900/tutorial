@@ -88,7 +88,7 @@ def master(*args):
 
         for comm_current in waiting_comms:
           if comm_current.state_str == "FINISHED":
-            data = get_comm.get_payload()
+            data = comm_current.get_payload()
             waiting_comms.remove(comm_current)
             break
 
