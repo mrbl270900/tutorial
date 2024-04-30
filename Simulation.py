@@ -88,7 +88,6 @@ def master(*args):
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
-          this_actor.info(str(waiting_comm.test()))
           if waiting_comm.test():
             data = waiting_comms[0].get_payload()
             waiting_comms.remove(waiting_comms[0])
@@ -175,25 +174,29 @@ def worker(*args):
       else:
         this_actor.info("getting task")
         comm_get = mailbox.get_async()
-        comm_get.wait_for(5)
-        task = comm_get.get_payload()
-        this_actor.info("task got: " + str(task))
+        comm_get.start()
+      
+        if comm_get.test():
+          task = comm_get.get_payload()
+          this_actor.info("task got: " + str(task))
+          if task == "wait":
+            not_asked_for_task = True
+            this_actor.sleep_for(10)
 
-        if task == "wait":
-          not_asked_for_task = True
-          this_actor.sleep_for(10)
-
-        elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-          this_actor.info("running:" + str(task.tasknr))
-          this_actor.execute(task.computing_cost)
-          this_actor.info("done with task:" + str(task.tasknr))
-          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
-          comm.wait_for(5)
-          this_actor.info("asked for task")
-          
-        else: # Stop when receiving an invalid compute_cost
-          done = True
-          this_actor.info("Exiting now.")
+          elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+            this_actor.info("running:" + str(task.tasknr))
+            this_actor.execute(task.computing_cost)
+            this_actor.info("done with task:" + str(task.tasknr))
+            comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
+            comm.wait_for(5)
+            this_actor.info("asked for task")
+            
+          else: # Stop when receiving an invalid compute_cost
+            done = True
+            this_actor.info("Exiting now.")
+        
+        else:
+          this_actor.sleep_for(0.1)
 
     except Exception as e:
         not_asked_for_task = True
