@@ -89,7 +89,7 @@ def master(*args):
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
           if waiting_comm.test():
-            this_actor.info(str(waiting_comm.test()))
+            this_actor.info(str(waiting_comm.get_payload()))
             data = waiting_comm.get_payload()
             waiting_comms.remove(waiting_comm)
 
