@@ -83,7 +83,7 @@ def master(*args):
 
       waiting_comms.append(server_mailbox.get_async())
       
-      if waiting_comms.count > 0:
+      if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
           if waiting_comm.state_str == "FINISHED":
             data = waiting_comms[0].get_payload()
