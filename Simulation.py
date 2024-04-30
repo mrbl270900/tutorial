@@ -55,6 +55,7 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
   data_ready = False
+  waiting_comms = []
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -80,16 +81,19 @@ def master(*args):
             tasks.append(task)
             sent_tasks.remove(task)
 
-      this_actor.info(str(server_mailbox.ready))
-      if server_mailbox.ready:
-        get_comm = server_mailbox.get_async()
-        this_actor.info(str(server_mailbox.get_async().state_str))        
-        get_comm.wait_for(3)
-        data = get_comm.get_payload()
-        data_ready = True
-      else:
-        this_actor.info(str(server_mailbox.get_async().state_str))
-        this_actor.sleep_for(0.1)
+      waiting_comms.append(server_mailbox.get_async())
+      
+      if waiting_comms.count > 0:
+        for waiting_comm in waiting_comms:
+          if waiting_comm.state_str == "FINISHED":
+            data = waiting_comms[0].get_payload()
+            waiting_comms.remove(waiting_comms[0])
+            data_ready = True
+            break
+          else:
+            this_actor.info(waiting_comm.state_str)
+        if not data_ready:
+          this_actor.sleep_for(1)
 
       if data_ready:
         if len(tasks) > 0 and type(data) == Request_For_Task:
