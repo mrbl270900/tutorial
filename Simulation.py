@@ -87,7 +87,7 @@ def master(*args):
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
-          if waiting_comm.state_str == "STARTED":
+          if waiting_comm.state_str != "STARTED":
             data = waiting_comms[0].get_payload()
             waiting_comms.remove(waiting_comms[0])
             data_ready = True
