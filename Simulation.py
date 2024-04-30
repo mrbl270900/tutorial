@@ -111,7 +111,7 @@ def master(*args):
               task.set_time_started()
               this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
               sent_tasks.append(task)
-              tasks.remove(tasks[0])
+              tasks.remove(task)
               comm = worker_mailbox.put_init(task, task.communication_cost)
               comm.wait_for(5)
 
