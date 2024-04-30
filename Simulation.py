@@ -83,6 +83,8 @@ def master(*args):
 
       get_comm = server_mailbox.get_async()
 
+      this_actor.info(str(get_comm))
+
       if get_comm.state_str == "FINISHED":
         data = get_comm.get_payload()
         waiting_comms.remove(get_comm)
