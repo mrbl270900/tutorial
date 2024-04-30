@@ -173,7 +173,6 @@ def worker(*args):
         
       else:
         task = mailbox.get()
-        task = comm_get.get_payload()
         this_actor.info("task got: " + str(task))
         if task == "wait":
           not_asked_for_task = True
