@@ -172,30 +172,24 @@ def worker(*args):
         not_asked_for_task = False
         
       else:
-        comm_get = mailbox.get_async()
-        comm_get.start()
-      
-        if comm_get.test():
-          task = comm_get.get_payload()
-          this_actor.info("task got: " + str(task))
-          if task == "wait":
-            not_asked_for_task = True
-            this_actor.sleep_for(10)
+        task = mailbox.get()
+        task = comm_get.get_payload()
+        this_actor.info("task got: " + str(task))
+        if task == "wait":
+          not_asked_for_task = True
+          this_actor.sleep_for(10)
 
-          elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
-            this_actor.info("running:" + str(task.tasknr))
-            this_actor.execute(task.computing_cost)
-            this_actor.info("done with task:" + str(task.tasknr))
-            comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
-            comm.wait_for(5)
-            this_actor.info("asked for task")
+        elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+          this_actor.info("running:" + str(task.tasknr))
+          this_actor.execute(task.computing_cost)
+          this_actor.info("done with task:" + str(task.tasknr))
+          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
+          comm.wait_for(5)
+          this_actor.info("asked for task")
             
-          else: # Stop when receiving an invalid compute_cost
-            done = True
-            this_actor.info("Exiting now.")
-        
-        else:
-          this_actor.sleep_for(0.1)
+        else: # Stop when receiving an invalid compute_cost
+          done = True
+          this_actor.info("Exiting now.")
 
     except Exception as e:
         not_asked_for_task = True
