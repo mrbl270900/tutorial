@@ -100,11 +100,11 @@ def master(*args):
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info(str(data))
-          this_actor.info("sending " + str(tasks[0].tasknr) + " to:" + str(data.mailbox)[8:-1])
           task = tasks[0]
+          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           task.set_time_started()
           sent_tasks.append(task)
-          tasks.remove(tasks[0])
+          tasks.remove(task)
           comm = worker_mailbox.put_init(task, task.communication_cost)
           comm.wait_for(5)
 
@@ -116,7 +116,7 @@ def master(*args):
           task.set_time_started()
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sent_tasks.append(task)
-          tasks.remove(tasks[0])
+          tasks.remove(task)
           comm = worker_mailbox.put_init(task, task.communication_cost)
           comm.wait_for(5)
 
