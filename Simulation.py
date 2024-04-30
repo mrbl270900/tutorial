@@ -83,9 +83,14 @@ def master(*args):
             tasks.append(task)
             sent_tasks.remove(task)
 
-        this_actor.info(get_comm.state_str)
-        if get_comm.state_str == "FINISHED":
-          data = get_comm.get_payload()
+        if get_comm not in waiting_comms:
+          waiting_comms.append(get_comm)
+
+        for comm_current in waiting_comms:
+          if comm_current.state_str == "FINISHED":
+            data = get_comm.get_payload()
+            waiting_comms.remove(comm_current)
+            break
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
