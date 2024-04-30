@@ -83,11 +83,12 @@ def master(*args):
 
       comm_get = server_mailbox.get_async()
       if(comm_get not in waiting_comms):
+        comm_get.start()
         waiting_comms.append(comm_get)
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
-          if waiting_comm.state_str != "STARTED":
+          if waiting_comm.test():
             data = waiting_comms[0].get_payload()
             waiting_comms.remove(waiting_comms[0])
             data_ready = True
