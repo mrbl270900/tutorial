@@ -81,7 +81,9 @@ def master(*args):
             sent_tasks.remove(task)
 
       if server_mailbox.ready:
-        get_comm = server_mailbox.get_async().wait_for(3)
+        get_comm = server_mailbox.get_async()
+        this_actor.info(str(server_mailbox.get_async().state_str))        
+        get_comm.wait_for(3)
         data = get_comm.get_payload()
         data_ready = True
       else:
