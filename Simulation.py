@@ -85,7 +85,7 @@ def master(*args):
         data = get_comm.get_payload()
         data_ready = True
       else:
-        this_actor.info(str(server_mailbox.get_async()))
+        this_actor.info(str(server_mailbox.get_async().state_str))
         this_actor.sleep_for(0.1)
 
       if data_ready:
