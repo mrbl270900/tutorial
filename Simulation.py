@@ -55,6 +55,7 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
   waiting_comms = []
+  data_ready = False
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -70,9 +71,6 @@ def master(*args):
 
   while len(tasks) > 0 or len(sent_tasks) > 0:
     try:
-      
-      get_comm = server_mailbox.get_async()
-
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
         #check for the tasks that have been issued if not done in 60 secunds
@@ -83,14 +81,19 @@ def master(*args):
             tasks.append(task)
             sent_tasks.remove(task)
 
-        if get_comm not in waiting_comms:
-          waiting_comms.append(get_comm)
+      get_comm = server_mailbox.get_async()
+        
+      if get_comm not in waiting_comms:
+        waiting_comms.append(get_comm)
 
-        for comm_current in waiting_comms:
-          if comm_current.state_str == "FINISHED":
-            data = comm_current.get_payload()
-            waiting_comms.remove(comm_current)
-            break
+      for comm_current in waiting_comms:
+        if comm_current.state_str == "FINISHED":
+          data = comm_current.get_payload()
+          waiting_comms.remove(comm_current)
+          data_ready = True
+          break
+
+      if data_ready:
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -136,6 +139,8 @@ def master(*args):
           this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
           comm = worker_mailbox.put_init(Task(-1, -1, -1, False, False), 50)
           comm.wait_for(5)
+
+        data_ready = False
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
