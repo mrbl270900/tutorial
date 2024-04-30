@@ -168,7 +168,7 @@ def worker(*args):
         not_asked_for_task = False
         
       else:
-        task = mailbox.get()
+        task = mailbox.get().wait_for(20)
         this_actor.info("task got: " + str(task))
         if task == "wait":
           not_asked_for_task = True
