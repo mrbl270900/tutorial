@@ -94,7 +94,7 @@ def master(*args):
             data_ready = True
             break
         if not data_ready:
-          this_actor.sleep_for(0.01)
+          this_actor.sleep_for(0.1)
 
       if data_ready:
         if len(tasks) > 0 and type(data) == Request_For_Task:
