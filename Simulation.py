@@ -91,58 +91,54 @@ def master(*args):
           if waiting_comm.test():
             data = waiting_comm.get_payload()
             waiting_comms.remove(waiting_comm)
-            data_ready = True
-            break
-        if not data_ready:
-          this_actor.sleep_for(1)
 
-      if data_ready:
-        if len(tasks) > 0 and type(data) == Request_For_Task:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info(str(data))
-          task = tasks[0]
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          task.set_time_started()
-          sent_tasks.append(task)
-          tasks.remove(task)
-          comm = worker_mailbox.put_init(task, task.communication_cost)
-          comm.wait_for(5)
+            if len(tasks) > 0 and type(data) == Request_For_Task:
+              worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+              this_actor.info(str(data))
+              task = tasks[0]
+              this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+              task.set_time_started()
+              sent_tasks.append(task)
+              tasks.remove(task)
+              comm = worker_mailbox.put_init(task, task.communication_cost)
+              comm.wait_for(5)
 
-        elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info(str(data))
-          sent_tasks.remove(data.task)
-          task = tasks[0]
-          task.set_time_started()
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          sent_tasks.append(task)
-          tasks.remove(task)
-          comm = worker_mailbox.put_init(task, task.communication_cost)
-          comm.wait_for(5)
+            elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
+              worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+              this_actor.info(str(data))
+              sent_tasks.remove(data.task)
+              task = tasks[0]
+              task.set_time_started()
+              this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+              sent_tasks.append(task)
+              tasks.remove(tasks[0])
+              comm = worker_mailbox.put_init(task, task.communication_cost)
+              comm.wait_for(5)
 
-        elif len(tasks) == 0 and len(sent_tasks) > 1:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info(str(data))
-          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          comm = worker_mailbox.put_init("wait", 50)
-          comm.wait_for(5)
+            elif len(tasks) == 0 and len(sent_tasks) > 1:
+              worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+              this_actor.info(str(data))
+              this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
+              comm = worker_mailbox.put_init("wait", 50)
+              comm.wait_for(5)
 
-        elif len(sent_tasks) == 1 and type(data) == Request_With_Task_Done:
-          sent_tasks = []
-          this_actor.info(str(data))
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-          comm = worker_mailbox.put_init(Task(-1, -1, -1, False, False), 50)
-          comm.wait_for(5)
+            elif len(sent_tasks) == 1 and type(data) == Request_With_Task_Done:
+              sent_tasks = []
+              this_actor.info(str(data))
+              worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+              this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
+              comm = worker_mailbox.put_init(Task(-1, -1, -1, False, False), 50)
+              comm.wait_for(5)
 
-        else:
-          this_actor.info(str(data))
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-          comm = worker_mailbox.put_init(Task(-1, -1, -1, False, False), 50)
-          comm.wait_for(5)
-
-        data_ready = False
+            else:
+              this_actor.info(str(data))
+              worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+              this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
+              comm = worker_mailbox.put_init(Task(-1, -1, -1, False, False), 50)
+              comm.wait_for(5)
+            
+          else:
+            this_actor.sleep_for(1)
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
