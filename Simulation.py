@@ -164,7 +164,7 @@ def worker(*args):
         
       else:
         this_actor.info("getting task")
-        task = mailbox.get()
+        task = mailbox.get().wait_for(5)
         this_actor.info("task got: " + str(task))
 
         if task == "wait":
