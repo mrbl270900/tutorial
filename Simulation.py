@@ -88,13 +88,14 @@ def master(*args):
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
+          this_actor.info
           if waiting_comm.test():
             data = waiting_comms[0].get_payload()
             waiting_comms.remove(waiting_comms[0])
             data_ready = True
             break
         if not data_ready:
-          this_actor.sleep_for(1)
+          this_actor.sleep_for(0.01)
 
       if data_ready:
         if len(tasks) > 0 and type(data) == Request_For_Task:
