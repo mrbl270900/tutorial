@@ -85,6 +85,8 @@ def master(*args):
         
       if get_comm not in waiting_comms:
         waiting_comms.append(get_comm)
+      else:
+        this_actor.sleep_for(0.1)
 
       for comm_current in waiting_comms:
         if comm_current.state_str == "FINISHED":
@@ -141,9 +143,6 @@ def master(*args):
           comm.wait_for(5)
 
         data_ready = False
-
-      else:
-        this_actor.sleep_for(0.1)
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
