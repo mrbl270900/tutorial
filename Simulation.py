@@ -82,7 +82,7 @@ def master(*args):
             sent_tasks.remove(task)
 
       comm_get = server_mailbox.get_async()
-      if(comm_get not in waiting_comms)
+      if(comm_get not in waiting_comms):
         waiting_comms.append()
       
       if len(waiting_comms) > 0:
