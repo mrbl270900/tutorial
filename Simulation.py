@@ -168,7 +168,9 @@ def worker(*args):
         not_asked_for_task = False
         
       else:
-        task = mailbox.get().wait_for(20)
+        comm_get = mailbox.get_async()
+        comm_get.wait_for(20)
+        task = comm_get.get_payload()
         this_actor.info("task got: " + str(task))
         if task == "wait":
           not_asked_for_task = True
