@@ -84,9 +84,8 @@ def master(*args):
       this_actor.info(str(server_mailbox.ready))
 
       if server_mailbox.ready:
-        get_comm = server_mailbox.get_async()
-        data = get_comm.get_payload().wait_for(3)
-        waiting_comms.remove(get_comm)
+        get_comm = server_mailbox.get_async().wait_for(3)
+        data = get_comm.get_payload()
         data_ready = True
       else:
         this_actor.sleep_for(0.1)
