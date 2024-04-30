@@ -80,6 +80,7 @@ def master(*args):
             tasks.append(task)
             sent_tasks.remove(task)
 
+      this_actor.info(str(server_mailbox.ready))
       if server_mailbox.ready:
         get_comm = server_mailbox.get_async()
         this_actor.info(str(server_mailbox.get_async().state_str))        
