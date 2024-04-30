@@ -72,8 +72,7 @@ def master(*args):
     try:
       
       get_comm = server_mailbox.get_async()
-      if get_comm not in waiting_comms:
-        waiting_comms.append(get_comm)
+      waiting_comms.append(get_comm)
 
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
