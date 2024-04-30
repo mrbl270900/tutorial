@@ -81,11 +81,10 @@ def master(*args):
             tasks.append(task)
             sent_tasks.remove(task)
 
-      get_comm = server_mailbox.get_async()
+      this_actor.info(str(server_mailbox.ready))
 
-      this_actor.info(str(get_comm))
-
-      if get_comm.state_str == "FINISHED":
+      if server_mailbox.ready:
+        get_comm = server_mailbox.get_async()
         data = get_comm.get_payload()
         waiting_comms.remove(get_comm)
         data_ready = True
