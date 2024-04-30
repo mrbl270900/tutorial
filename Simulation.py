@@ -172,7 +172,6 @@ def worker(*args):
         not_asked_for_task = False
         
       else:
-        this_actor.info("getting task")
         comm_get = mailbox.get_async()
         comm_get.start()
       
