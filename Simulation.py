@@ -160,7 +160,7 @@ def worker(*args):
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
-        comm.wait()
+        comm.wait_for(20)
         not_asked_for_task = False
         
       else:
@@ -177,7 +177,7 @@ def worker(*args):
           this_actor.execute(task.computing_cost)
           this_actor.info("done with task:" + str(task.tasknr))
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
-          comm.wait_for(5)
+          comm.wait_for(20)
           this_actor.info("asked for task")
             
         else: # Stop when receiving an invalid compute_cost
