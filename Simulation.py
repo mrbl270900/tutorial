@@ -54,7 +54,7 @@ def master(*args):
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
-  old_comm = []
+  old_comm = object
   waiting_comms = []
   sending_comms = []
 
