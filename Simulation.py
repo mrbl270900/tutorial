@@ -54,7 +54,7 @@ def master(*args):
   server_mailbox = Mailbox.by_name(this_actor.get_host().name)
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
-  data_ready = False
+  old_comm
   waiting_comms = []
   sending_comms = []
 
@@ -88,13 +88,14 @@ def master(*args):
 
       while True:
         comm_get = server_mailbox.get_async()
-        this_actor.info(str(comm_get.dst_data_size))
-        if comm_get.dst_data_size == 0:
+        
+        if comm_get == old_comm:
           break
 
         if(comm_get not in waiting_comms):
           comm_get.start()
           waiting_comms.append(comm_get)
+          old_comm = comm_get
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
