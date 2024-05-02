@@ -86,9 +86,9 @@ def master(*args):
             this_actor.info(str(comm.state_str))
             sending_comms.remove(comm)
       
-      this_actor.info(str(Mailbox.ready))
-      while Mailbox.ready:
+      while True:
         comm_get = server_mailbox.get_async()
+        this_actor.info(str(Mailbox.ready))
         if not Mailbox.ready:
           break
         else:
