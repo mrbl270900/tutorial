@@ -86,11 +86,15 @@ def master(*args):
           if comm.state_str == "FINISHED":
             sending_comms.remove(comm)
 
+      while True:
+        comm_get = server_mailbox.get_async()
 
-      comm_get = server_mailbox.get_async()
-      if(comm_get not in waiting_comms):
-        comm_get.start()
-        waiting_comms.append(comm_get)
+        if comm_get == None:
+          break
+
+        if(comm_get not in waiting_comms):
+          comm_get.start()
+          waiting_comms.append(comm_get)
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
