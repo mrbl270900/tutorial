@@ -100,7 +100,7 @@ def master(*args):
               task.set_time_started()
               sent_tasks.append(task)
               tasks.remove(task)
-              worker_mailbox.put_async(task, task.communication_cost)
+              worker_mailbox.put_async(task, task.communication_cost).detach()
 
             elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
               worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -111,26 +111,26 @@ def master(*args):
               this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
               sent_tasks.append(task)
               tasks.remove(task)
-              worker_mailbox.put_async(task, task.communication_cost)
+              worker_mailbox.put_async(task, task.communication_cost).detach()
 
             elif len(tasks) == 0 and len(sent_tasks) > 1:
               worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
               this_actor.info(str(data))
               this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-              worker_mailbox.put_async("wait", 50)
+              worker_mailbox.put_async("wait", 50).detach()
 
             elif len(sent_tasks) == 1 and type(data) == Request_With_Task_Done:
               sent_tasks = []
               this_actor.info(str(data))
               worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
               this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-              worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50)
+              worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50).detach()
 
             else:
               this_actor.info(str(data))
               worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
               this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-              worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50)
+              worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50).detach()
           else:
             this_actor.sleep_for(1)
 
