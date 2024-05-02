@@ -160,7 +160,7 @@ def worker(*args):
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
-        comm.wait_for(5)
+        comm.wait()
         not_asked_for_task = False
         
       else:
