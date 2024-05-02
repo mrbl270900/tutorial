@@ -91,7 +91,7 @@ def master(*args):
         this_actor.info(str(comm_get.sender))
         this_actor.info(str(comm_get.mailbox))
         this_actor.info(str(comm_get.state_str))
-        if str(comm_get.state_str) == "None":
+        if str(comm_get.sender) == "None":
           break
 
         if(comm_get not in waiting_comms):
