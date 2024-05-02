@@ -88,8 +88,8 @@ def master(*args):
 
       while True:
         comm_get = server_mailbox.get_async()
-        this_actor.info(str(comm_get.mailbox))
-        if str(comm_get.mailbox) == "Mailbox(Server)":
+        this_actor.info(str(comm_get.sender))
+        if str(comm_get.sender) == "None":
           break
 
         if(comm_get not in waiting_comms):
