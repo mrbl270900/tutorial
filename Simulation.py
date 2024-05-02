@@ -83,10 +83,12 @@ def master(*args):
       if len(sending_comms) > 0:
         for comm in sending_comms:
           if comm.state_str == "FINISHED":
+            this_actor.info(str(comm.state_str))
             sending_comms.remove(comm)
 
       while True:
         comm_get = server_mailbox.get_async()
+        this_actor.info(str(type(comm_get.sender)))
         if comm_get.sender == None:
           break
         else:
@@ -137,7 +139,7 @@ def master(*args):
           else:
             this_actor.sleep_for(0.1)
       else:
-        this_actor.sleep_for(1)
+        this_actor.sleep_for(0.1)
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
