@@ -88,7 +88,7 @@ def master(*args):
 
       while True:
         comm_get = server_mailbox.get_async()
-        this_actor.info(str(comm_get))
+        this_actor.info(str(comm_get.comm_id))
         if comm_get == old_comm:
           this_actor.info("Break")
           break
