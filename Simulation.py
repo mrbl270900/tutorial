@@ -88,17 +88,14 @@ def master(*args):
       while True:
         comm_get = server_mailbox.get_async()
         if comm_get.sender == None:
-          this_actor.info("Break")
           break
         else:
-          this_actor.info("Add")
           comm_get.start()
           waiting_comms.append(comm_get)
       
       if len(waiting_comms) > 0:
         for waiting_comm in waiting_comms:
           if waiting_comm.test():
-            this_actor.info(str(waiting_comm.state_str))
             data = waiting_comm.get_payload()
             this_actor.info(str(data))
             waiting_comms.remove(waiting_comm)
