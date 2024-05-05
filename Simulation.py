@@ -133,7 +133,7 @@ def master(*args):
       else:
         this_actor.sleep_for(0.1)
     
-      no_worker_in_wait = (Time.get_time() - time_last_wait) < 15
+      no_worker_in_wait = (Time.get_time() - time_last_wait) < 15 #checking if all workers are not waiting if no wait has been sent the last 15 secunds alle workers are done 
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
