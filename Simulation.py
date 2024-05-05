@@ -113,6 +113,13 @@ def master(*args):
           tasks.remove(task)
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
+        elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
+          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+          sent_tasks.remove(data.task)
+          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
+          time_last_wait = Time.get_time()
+          sending_comms.append(worker_mailbox.put_async("wait", 50))
+
         elif len(tasks) == 0 and len(sent_tasks) > 0:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
