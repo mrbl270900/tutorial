@@ -55,6 +55,8 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
+  no_worker_in_wait = True
+  time_last_wait = Time.get_time()
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -67,7 +69,7 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0 or len(sent_tasks) > 0:
+  while len(tasks) > 0 or len(sent_tasks) > 0 or no_worker_in_wait:
     try:
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
@@ -111,16 +113,11 @@ def master(*args):
           tasks.remove(task)
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
-        elif len(tasks) == 0 and len(sent_tasks) > 1:
+        elif len(tasks) == 0 and len(sent_tasks) > 0:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
+          time_last_wait = Time.get_time()
           sending_comms.append(worker_mailbox.put_async("wait", 50))
-
-        elif len(sent_tasks) == 1 and type(data) == Request_With_Task_Done:
-          sent_tasks = []
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50))
 
         else:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -128,11 +125,13 @@ def master(*args):
           sending_comms.append(worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50))
       else:
         this_actor.sleep_for(0.1)
+    
+      no_worker_in_wait = (Time.get_time() - time_last_wait) > 15
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
 
-  this_actor.info("all taskes done")
+  this_actor.info("all taskes and workers done")
 # master-end
 
 # worker-begin
@@ -153,12 +152,12 @@ def worker(*args):
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
-        comm.wait_for(20)
+        comm.wait_for(5)
         not_asked_for_task = False
         
       else:
         comm_get = mailbox.get_async()
-        comm_get.wait_for(20)
+        comm_get.wait_for(5)
         task = comm_get.get_payload()
         this_actor.info("task got: " + str(task))
         if task == "wait":
@@ -170,7 +169,7 @@ def worker(*args):
           this_actor.execute(task.computing_cost)
           this_actor.info("done with task:" + str(task.tasknr))
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
-          comm.wait_for(20)
+          comm.wait_for(5)
           this_actor.info("asked for task")
             
         else: # Stop when receiving an invalid compute_cost
