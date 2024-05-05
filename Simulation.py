@@ -55,8 +55,6 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
-  no_worker_in_wait = True
-  time_last_wait = Time.get_time()
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -69,7 +67,7 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0 or len(sent_tasks) > 0 or no_worker_in_wait:
+  while len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
     try:
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
@@ -117,13 +115,11 @@ def master(*args):
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           sent_tasks.remove(data.task)
           this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          time_last_wait = Time.get_time()
           sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         elif len(tasks) == 0 and len(sent_tasks) > 0:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          time_last_wait = Time.get_time()
           sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         else:
@@ -132,8 +128,6 @@ def master(*args):
           sending_comms.append(worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50))
       else:
         this_actor.sleep_for(0.1)
-    
-      no_worker_in_wait = (Time.get_time() - time_last_wait) < 15 #checking if all workers are not waiting if no wait has been sent the last 15 secunds alle workers are done 
 
     except Exception as e:
         this_actor.info(f"An error occurred in server: {e}")
