@@ -8,9 +8,9 @@ import numpy as np
 platform = ET.Element('platform')
 platform.set('version', '4.1')
 
-amount_workers = 10
+amount_workers = 1000 # 1 thosund workers 
 
-amount_tasks = 1000
+amount_tasks = 1000000 # 1 milion task
 
 task_avg_prosesing_size = 25000000000
 
