@@ -212,20 +212,20 @@ stateFile_strings = [
 ]
 
 bandwidth_catagory = [
-    ("10MBps", "verySlow", 0.10),
-    ("30MBps", "slow", 0.25),
-    ("65MBps", "medium", 0.30),
-    ("100MBps", "fast", 0.25),
-    ("250MBps", "veryFast", 0.10)
+    (10000000, "verySlow", 0.10),
+    (30000000, "slow", 0.25),
+    (65000000, "medium", 0.30),
+    (100000000, "fast", 0.25),
+    (250000000, "veryFast", 0.10)
 ]
 
 #=========================================================================
 # Here is a list of strings to put in the generated bandwidth txt files
 bandwidthFile_strings = [
-    "0.0 40000000\n7.0 60000000\nLOOPAFTER 12",  
-    "0.0 35000000\n9.0 55000000\nLOOPAFTER 12",  
-    "0.0 45000000\n6.0 65000000\nLOOPAFTER 12"   
-    
+    (1, 1, 1,  "static", 0.25),
+    (0.9, 1, 0.8, "low", 0.40),  
+    (0.7, 0.9, 0.8, "med", 0.25),  
+    (0.7, 0.5, 0.9, "high", 0.10), 
 ]
 
 # Here we define the folder where we want to save our files
@@ -293,11 +293,13 @@ for x in range(0, amount_workers):
     #here we set the speed from 5 catagorys
     link.set('id', str(x+1))
     bandwidth, catagory, weight = random.choices(bandwidth_catagory)[0]
-    link.set('bandwidth', bandwidth)
+    bandwidth_str = str(bandwidth)
+    link.set('bandwidth', str(bandwidth))
     link.set('latency', '9.0ms') #static latency
     bandWidthFile = os.path.join(folder_path_bandwidth, f"link{x+1}-bandWidth_file.txt")  #code to add bandwidth file attribute with a generated txt file for each host tags 
     link.set('bandwidth_file', bandWidthFile )
-    bandWidthFile_string = random.choice(bandwidthFile_strings) # here we randomly choose a string from the list of strings
+    change1, change2, change3, catagoty, weight,  = random.choices(bandwidthFile_strings)[0]
+    bandWidthFile_string = "0.0 " + str(bandwidth - change1) + "\n4.0 " + str(bandwidth * change2) + "\n8.0 " + str(bandwidth * change3) + "\nLOOPAFTER 12"# TODO need to add sleep for nodes here
     with open(bandWidthFile, 'w') as f: 
         f.write(bandWidthFile_string)
 
