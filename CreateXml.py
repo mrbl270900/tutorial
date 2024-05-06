@@ -190,17 +190,16 @@ computer_data = [
     ('16.00','4.43Gf',0.0008129420372),
     ('4.00','4.42Gf',0.001788472482),
     ('7.60','4.41Gf',0.0008129420372)
-
-
 ]
 
 #=========================================================================
 # Here is a list of strings to put in the generated speed txt files
 # all of the strings in the three lists follow the conventions listed in the SIMGRID documentation :-D
 speedFile_strings = [
-    "0 0.5\n2 0.3\n4 0.2\nLOOPAFTER 5",  
-    "0 0.2\n2 0.5\n4 0.4\nLOOPAFTER 5",  
-    "0 0.3\n2 0.2\n4 0.1\nLOOPAFTER 5"   
+    ("0 0.5\n2 0.5\n4 0.5\nLOOPAFTER 5", "static", 0.25),
+    ("0 0.4\n2 0.5\n4 0.4\nLOOPAFTER 5", "low", 0.40),  
+    ("0 0.5\n2 0.2\n4 0.3\nLOOPAFTER 5", "med", 0.25),  
+    ("0 0.3\n2 0.5\n4 0.2\nLOOPAFTER 5", "high", 0.10),   
     
 ]
 #=========================================================================
@@ -211,6 +210,15 @@ stateFile_strings = [
     "0 1\n20 1\nLOOPAFTER 45"   
     
 ]
+
+bandwidth_catagory = [
+    ("10MBps", "verySlow", 0.10),
+    ("30MBps", "slow", 0.25),
+    ("65MBps", "medium", 0.30),
+    ("100MBps", "fast", 0.25),
+    ("250MBps", "veryFast", 0.10)
+]
+
 #=========================================================================
 # Here is a list of strings to put in the generated bandwidth txt files
 bandwidthFile_strings = [
@@ -245,7 +253,7 @@ zone.set('routing', 'Full')
 
 host = ET.SubElement(zone, "host")
 host.set('id', 'Server')
-host.set('speed', '980950.0Mf') #980.95 gigaflpos pr core (would very likely be a lot lower)
+host.set('speed', '98950.0Mf') #9895 gigaflpos pr core (would very likely be a lot lower)
 host.set('core', '32') #number of cores for the server host
 #host.set('speed_file', 'availabilityFile.txt') # availability_file (speed_file) attribute :-D 
 #host.set('state_file', 'hostState.txt') # state_file attribute :-D 
@@ -263,11 +271,11 @@ for x in range(0, amount_workers):
     speedFile = os.path.join(folder_path_speed, f"{temp_worker.name}-speed_file.txt")
     #speedFile = f"{temp_worker.name}-speed_file.txt"  #code to add speed_file attribute with a generated txt file for each host tags 
     host.set('speed_file', speedFile )
-    speedfile_string = random.choice(speedFile_strings) # here we randomly choose a string from the list of strings
+    speedfile_string, changerate, weight = random.choices(speedFile_strings)[0] # here we randomly choose a string from the list of strings
     with open(speedFile, 'w') as f:
         f.write(speedfile_string)
     
-    stateFile = os.path.join(folder_path_state, f"{temp_worker.name}-state_file.txt")  #code to add state_file attribute with a generated txt file for each host tags 
+    stateFile = os.path.join(folder_path_state, f"{temp_worker.name}-state_file.txt")  #code to add state_file attribute with a generated txt file for each host tags NOT USED ATM
     host.set('state_file', stateFile )
     statefile_string = random.choice(stateFile_strings) # here we randomly choose a string from the list of strings
     with open(stateFile, 'w') as f:
@@ -282,9 +290,11 @@ link.set('bandwidth_file', 'bandwidth.txt' )
 
 for x in range(0, amount_workers):
     link = ET.SubElement(zone, "link")
+    #here we set the speed from 5 catagorys
     link.set('id', str(x+1))
-    link.set('bandwidth', '65MBps')
-    link.set('latency', '9.0ms')
+    bandwidth, catagory, weight = random.choices(bandwidth_catagory)[0]
+    link.set('bandwidth', bandwidth)
+    link.set('latency', '9.0ms') #static latency
     bandWidthFile = os.path.join(folder_path_bandwidth, f"link{x+1}-bandWidth_file.txt")  #code to add bandwidth file attribute with a generated txt file for each host tags 
     link.set('bandwidth_file', bandWidthFile )
     bandWidthFile_string = random.choice(bandwidthFile_strings) # here we randomly choose a string from the list of strings

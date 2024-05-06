@@ -86,7 +86,7 @@ def master(*args):
             sending_comms.remove(comm)
       
       comm_get = server_mailbox.get_async()
-      comm_get.wait() #might remove this
+      comm_get.wait() #might remove this to fix when nodes are closing
       
       if comm_get.test():
         data = comm_get.get_payload()
