@@ -29,15 +29,14 @@ class Worker:
 #can_split_comunication: bool
 
 class Task:
-    def __init__(self, nr, task_size, comunication_size, can_split_data, can_split_comunication):
+    def __init__(self, nr, task_size, comunication_size, can_split_data):
         self.nr = nr
         self.task_size = task_size
         self.comunication_size = comunication_size
         self.can_split_data = can_split_data
-        self.can_split_comunication = can_split_comunication
 
     def get_string(self):
-        return str(self.nr) + "," + str(self.task_size) + "," + str(self.comunication_size) + "," + str(self.can_split_data) + "," + str(self.can_split_comunication)
+        return str(self.nr) + "," + str(self.task_size) + "," + str(self.comunication_size) + "," + str(self.can_split_data)
 
 #setting up main server node
 actor = ET.SubElement(platform, "actor")
@@ -65,7 +64,7 @@ task_avg_comunication_size_norm_dist = np.random.normal(task_avg_comunication_si
 
 
 for x in range(0,amount_tasks):
-    temp_task = Task(x, int(task_avg_prosesing_size_norm_dist[x]), int(task_avg_comunication_size_norm_dist[x]), random.choice([True, False]), random.choice([True, False]))
+    temp_task = Task(x, int(task_avg_prosesing_size_norm_dist[x]), int(task_avg_comunication_size_norm_dist[x]), random.choice([True, False]))
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 
