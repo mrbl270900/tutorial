@@ -68,11 +68,26 @@ for x in range(0,amount_tasks):
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 
+
+#=========================================================================
+# Here is a list of strings to put in the generated state txt files 
+Standard_deviation = 25
+stateFile_strings = np.random.normal(0, Standard_deviation, amount_workers)
+stateFile_strings_clean = []
+for x in stateFile_strings:
+    if x < 0:
+        x = int(x) * -1
+    stateFile_strings_clean.append(int(x))
+
+
 for x in range(0,amount_workers):
     temp_worker = Worker("Worker" + str(x))
     actor = ET.SubElement(platform, "actor")
     actor.set('host', temp_worker.name)
     actor.set('function', 'worker')
+    statefile_string = stateFile_strings[x]
+    argument = ET.SubElement(actor, "argument")
+    argument.set('value', str(stateFile_strings_clean[x]))
 
 save_path_file = "ServerSetup.xml"
 
@@ -201,14 +216,6 @@ speedFile_strings = [
     ("0 0.3\n2 0.5\n4 0.2\nLOOPAFTER 5", "high", 0.10),   
     
 ]
-#=========================================================================
-# Here is a list of strings to put in the generated state txt files 
-stateFile_strings = [
-    "1 0\n25 1\nLOOPAFTER 20",  
-    "1 0\n10 1\nLOOPAFTER 15",  
-    "1 1\n20 0\nLOOPAFTER 25"   
-    
-]
 
 bandwidth_catagory = [
     (10000000, "verySlow", 0.10),
@@ -274,11 +281,11 @@ for x in range(0, amount_workers):
     with open(speedFile, 'w') as f:
         f.write(speedfile_string)
     
-    stateFile = os.path.join(folder_path_state, f"{temp_worker.name}-state_file.txt")  #code to add state_file attribute with a generated txt file for each host tags NOT USED ATM
-    host.set('state_file', stateFile )
-    statefile_string = random.choice(stateFile_strings) # here we randomly choose a string from the list of strings
-    with open(stateFile, 'w') as f:
-        f.write(statefile_string)
+#    stateFile = os.path.join(folder_path_state, f"{temp_worker.name}-state_file.txt")  #code to add state_file attribute with a generated txt file for each host tags NOT USED ATM
+#    host.set('state_file', stateFile )
+#    statefile_string = random.choice(stateFile_strings) # here we randomly choose a string from the list of strings
+#    with open(stateFile, 'w') as f:
+#        f.write(statefile_string)
     
 
 link = ET.SubElement(zone, "link")
