@@ -204,9 +204,9 @@ speedFile_strings = [
 #=========================================================================
 # Here is a list of strings to put in the generated state txt files 
 stateFile_strings = [
-    "0 1\n25 1\nLOOPAFTER 35",  
-    "0 1\n10 1\nLOOPAFTER 35",  
-    "0 1\n20 1\nLOOPAFTER 45"   
+    "1 0\n25 1\nLOOPAFTER 20",  
+    "1 0\n10 1\nLOOPAFTER 15",  
+    "1 1\n20 0\nLOOPAFTER 25"   
     
 ]
 
