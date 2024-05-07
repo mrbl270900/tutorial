@@ -190,8 +190,7 @@ if __name__ == '__main__':
 
     # Register the classes representing the actors
     e.register_actor("master", master)
-    actor = e.register_actor("worker", worker)
-    actor.set_auto_restart(True)
+    e.register_actor("worker", worker)
 
     # Load the platform description and then deploy the application
     e.load_platform(sys.argv[1])
