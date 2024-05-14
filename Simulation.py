@@ -54,6 +54,7 @@ def master(*args):
   server_mailbox.set_receiver(Actor.self())
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
+  done = False
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -66,7 +67,7 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
+  while done: #len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
     try:
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
@@ -123,6 +124,7 @@ def master(*args):
 
         else:
           this_actor.kill_all()
+          done = True
       else:
         this_actor.sleep_for(0.1)
 
