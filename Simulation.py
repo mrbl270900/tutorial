@@ -40,8 +40,8 @@ class Time:
   def get_time():
     return e.clock
 
-def comoyting_cost_sort(e):
-  return e['computing_cost']
+def computing_cost_sort(e):
+  return e.computing_cost
 
 
 # master_random-begin
@@ -159,7 +159,7 @@ def master_smallest_first(*args):
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
 
-  tasks.sort(reverse=True ,key=comoyting_cost_sort)
+  tasks.sort(reverse=True ,key=computing_cost_sort)
 
   this_actor.info("tasks preprosesed")
 
