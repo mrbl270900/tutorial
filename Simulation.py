@@ -136,7 +136,8 @@ def master(*args):
 
 # worker-begin
 def worker(*args):
-  assert len(args) == 0, "The worker expects to not get any argument"
+  assert len(args) == 1, "The worker expects to not get any argument"
+  workers_dweel_time = int(args[0])
   this_actor.info("worker starting")
   this_actor.info(str(this_actor.get_host().name))
   testVariable = str(this_actor.get_host().name)
@@ -147,8 +148,14 @@ def worker(*args):
   this_actor.info("server mail box done")
   done = False
   not_asked_for_task = True
+  time_started = Time.get_time()
   while not done:
     try:
+      if time_started < Time.get_time() - workers_dweel_time:
+        this_actor.info(str(this_actor.get_host().name) + " turning off")
+        this_actor.sleep_for(30)
+        time_started = Time.get_time()
+
       if not_asked_for_task:
         this_actor.info("I'm trying to send a request for a task")
         comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
@@ -160,14 +167,23 @@ def worker(*args):
         comm_get.wait_for(5)
         task = comm_get.get_payload()
         this_actor.info("task got: " + str(task))
+
         if task == "wait":
           not_asked_for_task = True
           this_actor.sleep_for(10)
 
-        elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost 
+        elif task.computing_cost > 0: # If compute_cost is valid, execute a computation of that cost
+          if time_started < Time.get_time() - workers_dweel_time:
+            this_actor.info(str(this_actor.get_host().name) + " turning off")
+            this_actor.sleep_for(30)
+            time_started = Time.get_time()
           this_actor.info("running:" + str(task.tasknr))
           this_actor.execute(task.computing_cost)
           this_actor.info("done with task:" + str(task.tasknr))
+          if time_started < Time.get_time() - workers_dweel_time:
+            this_actor.info(str(this_actor.get_host().name) + " turning off")
+            this_actor.sleep_for(30)
+            time_started = Time.get_time()
           comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
           comm.wait_for(5)
           this_actor.info("asked for task")
