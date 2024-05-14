@@ -122,9 +122,7 @@ def master(*args):
           sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         else:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending stop to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async(Task(-1, -1, -1, False, False), 50))
+          this_actor.kill_all()
       else:
         this_actor.sleep_for(0.1)
 
