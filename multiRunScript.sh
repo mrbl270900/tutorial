@@ -2,13 +2,7 @@
 
 # Define the number of times to run the scripts
 total_runs=400
-log_file="script.log"
 last_lines_Sim=()
-
-# Function to read the last line of a log file
-read_last_line() {
-    tail -n 1 "$1"
-}
 
 # Loop to run the first Python script
 for ((i=1; i<=$total_runs; i++))
