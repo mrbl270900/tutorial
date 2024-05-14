@@ -17,9 +17,8 @@ do
     python CreateXml.py
 
     echo "Running Simulation.py - Iteration $i"
-    python Simulation.py NetworkSetup.xml ServerSetup.xml >> "$log_file"  # Redirect output to log file
-    last_line=$(read_last_line "$log_file")
-    echo "Last line of $log_file: $last_line"
+    output=$(python Simulation.py NetworkSetup.xml ServerSetup.xml)
+    last_line=$(echo "$output" | tail -n 1)
     last_lines_Sim+=("$last_line")
 done
 
