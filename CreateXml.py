@@ -80,7 +80,7 @@ catagory_nr = 0
 catagory = task_type[catagory_nr]
 
 for x in range(0,amount_tasks):
-    if x > task_pr_catagory and task_type[len(task_type)] != task_type:
+    if x > task_pr_catagory and task_type[len(task_type)-1] != task_type:
         task_pr_catagory = task_pr_catagory + task_pr_catagory
         catagory_nr = catagory_nr + 1
         catagory = task_type[catagory_nr]
