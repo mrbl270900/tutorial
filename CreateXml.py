@@ -122,7 +122,7 @@ computer_data = [
     ('8.00','5.53Gf',0.005690594261),
     ('6.00','5.51Gf',0.002764002927),
     ('8.00','5.47Gf',0.00349565076),
-    ('16.00','5.46',0.004308592797),
+    ('16.00','5.46Gf',0.004308592797),
     ('31.45','5.42Gf',0.004715063816),
     ('8.00','5.42Gf',0.005934476872),
     ('8.00','5.4Gf',0.003658239168),
@@ -300,7 +300,7 @@ for x in range(0, amount_workers):
     link.set('id', str(x+1))
     bandwidth, catagory, weight = random.choices(bandwidth_catagory)[0]
     bandwidth_str = str(bandwidth) + "Bps" 
-    link.set('bandwidth', str(bandwidth))
+    link.set('bandwidth', bandwidth_str)
     link.set('latency', '9.0ms') #static latency
     bandWidthFile = os.path.join(folder_path_bandwidth, f"link{x+1}-bandWidth_file.txt")  #code to add bandwidth file attribute with a generated txt file for each host tags 
     link.set('bandwidth_file', bandWidthFile )
