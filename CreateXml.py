@@ -63,7 +63,28 @@ Standard_deviation = 2000000
 task_avg_comunication_size_norm_dist = np.random.normal(task_avg_comunication_size, Standard_deviation, amount_tasks)
 
 
+
+task_type = [
+    ("small", "small"),
+    ("med", "small"),
+    ("big", "small"),
+    ("small", "med"),
+    ("med", "med"),
+    ("big", "med"),
+    ("small", "big"),
+    ("med", "big"),
+    ("big", "big")]
+
+task_pr_catagory = int(amount_tasks / len(task_type))
+catagory_nr = 0
+catagory = task_type[catagory_nr]
+
 for x in range(0,amount_tasks):
+    if x > task_pr_catagory and task_type[len(task_type)] != task_type:
+        task_pr_catagory = task_pr_catagory + task_pr_catagory
+        catagory_nr = catagory_nr + 1
+        catagory = task_type[catagory_nr]
+
     temp_task = Task(x, int(task_avg_prosesing_size_norm_dist[x]), int(task_avg_comunication_size_norm_dist[x]), random.choice([True, False]))
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
