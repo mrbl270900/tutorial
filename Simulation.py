@@ -395,7 +395,7 @@ if __name__ == '__main__':
     e = Engine(sys.argv)
 
     # Register the classes representing the actors
-    e.register_actor("master", master_biggest_first)
+    e.register_actor("master", master_random)
     e.register_actor("worker", worker)
 
     # Load the platform description and then deploy the application
