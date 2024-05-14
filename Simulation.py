@@ -123,7 +123,7 @@ def master(*args):
           sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         else:
-          this_actor.kill_all()
+          Actor.kill_all()
           not_done = False
       else:
         this_actor.sleep_for(0.1)
