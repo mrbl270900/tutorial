@@ -43,9 +43,12 @@ class Time:
 def computing_cost_sort(e):
   return e.computing_cost
 
+def tasknr(e):
+  return e.tasknr
 
-# master_random-begin
-def master_random(*args):
+
+# master-begin
+def master(*args):
   assert len(args) > 3, f"Actor master requires 3 parameters plus the workers' names, but got {len(args)}"
   tasks_count = int(args[0])
   compute_cost = int(args[1])
@@ -57,6 +60,7 @@ def master_random(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
+  alg = ""
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -66,6 +70,17 @@ def master_random(*args):
      task_count = i + 3
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
+
+
+  if alg == "small first":
+    this_actor.info("alg = small first")
+    tasks.sort(reverse=True ,key=computing_cost_sort)
+  elif alg == "big first":
+    this_actor.info("alg = big first")
+    tasks.sort(key=computing_cost_sort)
+  else:
+    this_actor.info("alg = random sorting")
+
 
   this_actor.info("tasks preprosesed")
 
@@ -79,6 +94,14 @@ def master_random(*args):
           if task.time_pased > 59:
             this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
             tasks.append(task)
+
+            if alg == "small first": #sorting the task when adding an old task to the tasks list
+              tasks.sort(reverse=True ,key=computing_cost_sort)
+            elif alg == "big first":
+              tasks.sort(key=computing_cost_sort)
+            else:
+              tasks.sort(key=tasknr)
+
             sent_tasks.remove(task)
 
       if len(sending_comms) > 0:
@@ -134,195 +157,7 @@ def master_random(*args):
         this_actor.info(f"An error occurred in server: {e}")
 
   this_actor.info("all taskes and workers done")
-# master_random-end
-
-#master_smallest_first start
-def master_smallest_first(*args):
-  assert len(args) > 3, f"Actor master requires 3 parameters plus the workers' names, but got {len(args)}"
-  tasks_count = int(args[0])
-  compute_cost = int(args[1])
-  communicate_cost = int(args[2])
-  tasks = []
-  sent_tasks = []
-  server_mailbox = Mailbox.by_name(this_actor.get_host().name)
-  server_mailbox.set_receiver(Actor.self())
-  last_run_sent_tasks_check = Time.get_time()
-  sending_comms = []
-  not_done = True
-
-  this_actor.info("Server started")
-  this_actor.info(str(tasks_count))
-
-  #make task obj's
-  for i in range(0, tasks_count):
-     task_count = i + 3
-     task = args[task_count].split(",")
-     tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
-
-  tasks.sort(reverse=True ,key=computing_cost_sort)
-
-  this_actor.info("tasks preprosesed")
-
-  while not_done: #len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
-    try:
-      if Time.get_time() - last_run_sent_tasks_check > 10:
-        last_run_sent_tasks_check = Time.get_time()
-        #check for the tasks that have been issued if not done in 60 secunds
-        for task in sent_tasks:
-          task.set_time_pased()
-          if task.time_pased > 59:
-            this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
-            tasks.append(task)
-            sent_tasks.remove(task)
-
-      if len(sending_comms) > 0:
-        for comm in sending_comms:
-          if comm.state_str == "FINISHED":
-            this_actor.info(str(comm.state_str))
-            sending_comms.remove(comm)
-      
-      comm_get = server_mailbox.get_async()
-      comm_get.wait() #might remove this to fix when nodes are closing
-      
-      if comm_get.test():
-        data = comm_get.get_payload()
-        this_actor.info(str(data))
-
-        if len(tasks) > 0 and type(data) == Request_For_Task:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          task = tasks[0]
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          task.set_time_started()
-          sent_tasks.append(task)
-          tasks.remove(task)
-          sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
-
-        elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          sent_tasks.remove(data.task)
-          task = tasks[0]
-          task.set_time_started()
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          sent_tasks.append(task)
-          tasks.remove(task)
-          sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
-
-        elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          sent_tasks.remove(data.task)
-          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
-
-        elif len(tasks) == 0 and len(sent_tasks) > 0:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
-
-        else:
-          Actor.kill_all()
-          not_done = False
-      else:
-        this_actor.sleep_for(0.1)
-
-    except Exception as e:
-        this_actor.info(f"An error occurred in server: {e}")
-
-  this_actor.info("all taskes and workers done")
-# master_smallest_first-end
-
-#master_biggest_first start
-def master_biggest_first(*args):
-  assert len(args) > 3, f"Actor master requires 3 parameters plus the workers' names, but got {len(args)}"
-  tasks_count = int(args[0])
-  compute_cost = int(args[1])
-  communicate_cost = int(args[2])
-  tasks = []
-  sent_tasks = []
-  server_mailbox = Mailbox.by_name(this_actor.get_host().name)
-  server_mailbox.set_receiver(Actor.self())
-  last_run_sent_tasks_check = Time.get_time()
-  sending_comms = []
-  not_done = True
-
-  this_actor.info("Server started")
-  this_actor.info(str(tasks_count))
-
-  #make task obj's
-  for i in range(0, tasks_count):
-     task_count = i + 3
-     task = args[task_count].split(",")
-     tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
-
-  tasks.sort(key=computing_cost_sort)
-
-  this_actor.info("tasks preprosesed")
-
-  while not_done: #len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
-    try:
-      if Time.get_time() - last_run_sent_tasks_check > 10:
-        last_run_sent_tasks_check = Time.get_time()
-        #check for the tasks that have been issued if not done in 60 secunds
-        for task in sent_tasks:
-          task.set_time_pased()
-          if task.time_pased > 59:
-            this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
-            tasks.append(task)
-            sent_tasks.remove(task)
-
-      if len(sending_comms) > 0:
-        for comm in sending_comms:
-          if comm.state_str == "FINISHED":
-            this_actor.info(str(comm.state_str))
-            sending_comms.remove(comm)
-      
-      comm_get = server_mailbox.get_async()
-      comm_get.wait() #might remove this to fix when nodes are closing
-      
-      if comm_get.test():
-        data = comm_get.get_payload()
-        this_actor.info(str(data))
-
-        if len(tasks) > 0 and type(data) == Request_For_Task:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          task = tasks[0]
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          task.set_time_started()
-          sent_tasks.append(task)
-          tasks.remove(task)
-          sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
-
-        elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          sent_tasks.remove(data.task)
-          task = tasks[0]
-          task.set_time_started()
-          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          sent_tasks.append(task)
-          tasks.remove(task)
-          sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
-
-        elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          sent_tasks.remove(data.task)
-          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
-
-        elif len(tasks) == 0 and len(sent_tasks) > 0:
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
-
-        else:
-          Actor.kill_all()
-          not_done = False
-      else:
-        this_actor.sleep_for(0.1)
-
-    except Exception as e:
-        this_actor.info(f"An error occurred in server: {e}")
-
-  this_actor.info("all taskes and workers done")
-# master_biggest_first-end
+# master-end
 
 # worker-begin
 def worker(*args):
