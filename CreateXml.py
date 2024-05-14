@@ -299,7 +299,7 @@ for x in range(0, amount_workers):
     #here we set the speed from 5 catagorys
     link.set('id', str(x+1))
     bandwidth, catagory, weight = random.choices(bandwidth_catagory)[0]
-    bandwidth_str = str(bandwidth)
+    bandwidth_str = str(bandwidth) + "Bps" 
     link.set('bandwidth', str(bandwidth))
     link.set('latency', '9.0ms') #static latency
     bandWidthFile = os.path.join(folder_path_bandwidth, f"link{x+1}-bandWidth_file.txt")  #code to add bandwidth file attribute with a generated txt file for each host tags 
