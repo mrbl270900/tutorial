@@ -13,6 +13,7 @@ do
     echo "Running Simulation.py - Iteration $i"
     output=$(python Simulation.py NetworkSetup.xml ServerSetup.xml)
     last_line=$(echo "$output" | tail -n 1)
+    echo "$last_line"
     last_lines_Sim+=("$last_line")
 done
 
