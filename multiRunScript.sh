@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the number of times to run the scripts
-total_runs=135
+total_runs=145
 last_lines_Sim=()
 
 # Loop to run the first Python script
