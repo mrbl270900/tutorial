@@ -27,7 +27,7 @@ class Task:
     self.time_started = e.clock
 
 def sort_full_size(val):
-  return val[1] + val[2]
+  return val.computing_cost + val.communication_cost
 
 class Request_For_Task: #can add data about node here
    def __init__(self, mailbox):
