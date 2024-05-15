@@ -78,9 +78,6 @@ comunication_catagory = task_comunication_cost_type[comunication_catagory_nr]
 task_comm_size = task_comunication_cost_type[0]
 task_prosesing_size = task_prosesing_cost_type[0]
 
-print(task_pr_procesing_catagory)
-print(task_pr_catagory)
-
 for x in range(0,amount_tasks):
     if x > task_pr_catagory:
         comunication_catagory_nr = comunication_catagory_nr + 1
@@ -96,7 +93,7 @@ for x in range(0,amount_tasks):
             task_prosesing_size = task_prosesing_cost_type[procesing_catagory_nr]
             task_pr_procesing_catagory = task_pr_procesing_catagory + int(amount_tasks / len(task_prosesing_cost_type))
         
-    temp_task = Task(x, task_comm_size[1], task_prosesing_size[1], True)
+    temp_task = Task(x, task_prosesing_size[1], task_comm_size[1], True)
     argument = ET.SubElement(actor, "argument")
     argument.set('value', temp_task.get_string())
 

@@ -62,8 +62,8 @@ def master(*args):
   not_done = True
   alg = ""
 
-  #this_actor.info("Server started")
-  #this_actor.info(str(tasks_count))
+  this_actor.info("Server started")
+  this_actor.info(str(tasks_count))
 
   #make task obj's
   for i in range(0, tasks_count):
@@ -73,17 +73,17 @@ def master(*args):
 
 
   if alg == "small first":
-    #this_actor.info("alg = small first")
+    this_actor.info("alg = small first")
     tasks.sort(reverse=True ,key=computing_cost_sort)
   elif alg == "big first":
-    #this_actor.info("alg = big first")
+    this_actor.info("alg = big first")
     tasks.sort(key=computing_cost_sort)
   else:
     test = "test"
-    #this_actor.info("alg = random sorting")
+    this_actor.info("alg = random sorting")
 
 
-  #this_actor.info("tasks preprosesed")
+  this_actor.info("tasks preprosesed")
 
   while not_done: #len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
     try:
