@@ -72,13 +72,17 @@ def master(*args):
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
 
+  
+
+  def sort_full_size(val):
+    return val[1] + val[2] 
 
   if alg == "small first":
     this_actor.info("alg = small first")
-    tasks.sort(reverse=True ,key=computing_cost_sort)
+    tasks.sort(reverse=True ,key=sort_full_size)
   elif alg == "big first":
     this_actor.info("alg = big first")
-    tasks.sort(key=computing_cost_sort)
+    tasks.sort(key=sort_full_size)
   else:
     this_actor.info("alg = random sorting")
     random.shuffle(tasks)
