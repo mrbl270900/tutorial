@@ -101,12 +101,15 @@ def master(*args):
             #this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
             tasks.append(task)
 
-            if alg == "small first": #sorting the task when adding an old task to the tasks list
-              tasks.sort(reverse=True ,key=computing_cost_sort)
+            if alg == "small first":
+              this_actor.info("alg = small first")
+              tasks.sort(reverse=True ,key=sort_full_size)
             elif alg == "big first":
-              tasks.sort(key=computing_cost_sort)
+              this_actor.info("alg = big first")
+              tasks.sort(key=sort_full_size)
             else:
-              tasks.sort(key=tasknr)
+              this_actor.info("alg = random sorting")
+              random.shuffle(tasks)
 
             sent_tasks.remove(task)
 
