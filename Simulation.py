@@ -26,7 +26,8 @@ class Task:
   def set_time_started(self):
     self.time_started = e.clock
 
-
+def sort_full_size(val):
+  return val[1] + val[2]
 
 class Request_For_Task: #can add data about node here
    def __init__(self, mailbox):
@@ -71,11 +72,6 @@ def master(*args):
      task_count = i + 3
      task = args[task_count].split(",")
      tasks.append(Task(int(task[0]), int(task[1]), int(task[2]), bool(task[3])))
-
-  
-
-  def sort_full_size(val):
-    return val[1] + val[2] 
 
   if alg == "small first":
     this_actor.info("alg = small first")
