@@ -61,7 +61,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = ""
+  alg = "small first"
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
