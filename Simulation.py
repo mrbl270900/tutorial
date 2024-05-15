@@ -62,7 +62,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "small first"
+  alg = "random"
 
   #this_actor.info("Server started")
   #this_actor.info(str(tasks_count))
@@ -76,7 +76,6 @@ def master(*args):
   if alg == "small first":
     this_actor.info("alg = small first")
     tasks.sort(reverse=True ,key=sort_full_size)
-    print(tasks)
   elif alg == "big first":
     this_actor.info("alg = big first")
     tasks.sort(key=sort_full_size)
@@ -99,13 +98,10 @@ def master(*args):
             tasks.append(task)
 
             if alg == "small first":
-              this_actor.info("alg = small first")
               tasks.sort(reverse=True ,key=sort_full_size)
             elif alg == "big first":
-              this_actor.info("alg = big first")
               tasks.sort(key=sort_full_size)
             else:
-              this_actor.info("alg = random sorting")
               random.shuffle(tasks)
 
             sent_tasks.remove(task)
