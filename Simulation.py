@@ -10,6 +10,7 @@
 from simgrid import Actor, Engine, Mailbox, this_actor
 import time
 import sys
+import random
 
 # task obj
 class Task:
@@ -79,8 +80,8 @@ def master(*args):
     this_actor.info("alg = big first")
     tasks.sort(key=computing_cost_sort)
   else:
-    test = "test"
     this_actor.info("alg = random sorting")
+    random.shuffle(tasks)
 
 
   this_actor.info("tasks preprosesed")
