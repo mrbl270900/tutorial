@@ -290,8 +290,6 @@ def master(*args):
                 elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) == 0:
                   data.link_speed = 30000000
                   data.speed = 5200000001
-                else:
-                  task = 
                 
               task.set_time_started()
               sent_tasks.append(task)
