@@ -321,7 +321,7 @@ def master(*args):
 
     except Exception as e:
         test = "test"
-        #this_actor.info(f"An error occurred in server: {e}")
+        this_actor.info(f"An error occurred in server: {e}")
 
   this_actor.info("all taskes and workers done")
 # master-end
