@@ -160,11 +160,11 @@ def master(*args):
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if alg == "catagory":
+            this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
             #logic for chosing task for worker
             #find right task if avalibul if not give close task
             task = None
             while task == None:
-              this_actor.info("looping")
               if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
                 task = low_low[0]
                 low_low.remove(task)
