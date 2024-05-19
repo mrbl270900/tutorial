@@ -228,7 +228,9 @@ def worker(*args):
 
       if not_asked_for_task:
         #this_actor.info("I'm trying to send a request for a task")
-        comm = server_mailbox.put_init(Request_For_Task(str(mailbox)), 50)
+        worker_number = Host.current().name[8: len(Host.current().name)]
+        this_actor.info(worker_number)
+        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().core_count, Link.by_name(worker_number)), 50)
         comm.wait_for(5)
         not_asked_for_task = False
         
