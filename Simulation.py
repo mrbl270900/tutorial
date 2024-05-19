@@ -161,26 +161,145 @@ def master(*args):
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if alg == "catagory":
             #logic for chosing task for worker
-            this_actor.info("link speed " + str(data.link_speed))
-            this_actor.info("speed " + str(data.speed))
-
-            task = tasks[0]
+            #find right task if avalibul if not give close task
+            task = None
+            while task == None:
+              if data.link_speed < 30000001 and data.speed < 4700000000 and len(low_low) > 0:
+                task = low_low[0]
+                low_low.remove(task)
+              elif data.link_speed < 30000001 and data.speed < 5200000000 and len(med_low) > 0:
+                task = med_low[0]
+                med_low.remove(task)
+              elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) > 0:
+                task = high_low[0]
+                high_low.remove(task)
+              elif data.link_speed == 65000000 and data.speed < 4700000000 and len(low_med) > 0:
+                task = low_med[0]
+                low_med.remove(task)
+              elif data.link_speed == 65000000 and data.speed < 5200000000 and len(med_med) > 0:
+                task = med_med[0]
+                med_med.remove(task)
+              elif data.link_speed == 65000000 and data.speed > 5500000000 and len(high_med) > 0:
+                task = high_med[0]
+                high_med.remove(task)
+              elif data.link_speed > 90000000 and data.speed < 4700000000 and len(low_high) > 0:
+                task = low_high[0]
+                low_high.remove(task)
+              elif data.link_speed > 90000000 and data.speed < 5200000000 and len(med_high) > 0:
+                task = med_high[0]
+                med_high.remove(task)
+              elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) > 0:
+                task = high_high[0]
+                high_high.remove(task)
+              else:
+                if data.link_speed < 30000001 and data.speed < 4700000000 and len(low_low) == 0:
+                  data.speed = 5200000001
+                  break
+                elif data.link_speed < 30000001 and data.speed < 5200000000 and len(med_low) == 0:
+                  data.speed = 5500000001
+                  break
+                elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) == 0:
+                  data.link_speed = 65000000
+                  data.speed = 5200000001
+                  break
+                elif data.link_speed == 65000000 and data.speed < 4700000000 and len(low_med) == 0:
+                  data.speed = 5200000001
+                  break
+                elif data.link_speed == 65000000 and data.speed < 5200000000 and len(med_med) == 0:
+                  data.speed = 5500000001
+                  break
+                elif data.link_speed == 65000000 and data.speed > 5500000000 and len(high_med) == 0:
+                  data.link_speed = 90000000
+                  data.speed = 5200000001
+                  break
+                elif data.link_speed > 90000000 and data.speed < 4700000000 and len(low_high) == 0:
+                  data.speed = 5200000001
+                  break
+                elif data.link_speed > 90000000 and data.speed < 5200000000 and len(med_high) == 0:
+                  data.speed = 5500000001
+                  break
+                elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) == 0:
+                  data.link_speed = 30000000
+                  data.speed = 5200000001
+                  break
+              
+            
+            task.set_time_started()
+            sent_tasks.append(task)
           else:
             task = tasks[0]
+            task.set_time_started()
+            sent_tasks.append(task)
+            tasks.remove(task)
           #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          task.set_time_started()
-          sent_tasks.append(task)
-          tasks.remove(task)
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           sent_tasks.remove(data.task)
-          task = tasks[0]
-          task.set_time_started()
+          if alg == "catagory":
+            #find right task if avalibul if not give close task
+            task = None
+            while task == None:
+              if data.link_speed < 30000001 and data.speed < 4700000000 and len(low_low) > 0:
+                task = low_low[0]
+                low_low.remove(task)
+              elif data.link_speed < 30000001 and data.speed < 5200000000 and len(med_low) > 0:
+                task = med_low[0]
+                med_low.remove(task)
+              elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) > 0:
+                task = high_low[0]
+                high_low.remove(task)
+              elif data.link_speed == 65000000 and data.speed < 4700000000 and len(low_med) > 0:
+                task = low_med[0]
+                low_med.remove(task)
+              elif data.link_speed == 65000000 and data.speed < 5200000000 and len(med_med) > 0:
+                task = med_med[0]
+                med_med.remove(task)
+              elif data.link_speed == 65000000 and data.speed > 5500000000 and len(high_med) > 0:
+                task = high_med[0]
+                high_med.remove(task)
+              elif data.link_speed > 90000000 and data.speed < 4700000000 and len(low_high) > 0:
+                task = low_high[0]
+                low_high.remove(task)
+              elif data.link_speed > 90000000 and data.speed < 5200000000 and len(med_high) > 0:
+                task = med_high[0]
+                med_high.remove(task)
+              elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) > 0:
+                task = high_high[0]
+                high_high.remove(task)
+              else:
+                if data.link_speed < 30000001 and data.speed < 4700000000 and len(low_low) == 0:
+                  data.speed = 5200000001
+                elif data.link_speed < 30000001 and data.speed < 5200000000 and len(med_low) == 0:
+                  data.speed = 5500000001                
+                elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) == 0:
+                  data.link_speed = 65000000
+                  data.speed = 5200000001                
+                elif data.link_speed == 65000000 and data.speed < 4700000000 and len(low_med) == 0:
+                  data.speed = 5200000001                
+                elif data.link_speed == 65000000 and data.speed < 5200000000 and len(med_med) == 0:
+                  data.speed = 5500000001                
+                elif data.link_speed == 65000000 and data.speed > 5500000000 and len(high_med) == 0:
+                  data.link_speed = 90000000
+                  data.speed = 5200000001                
+                elif data.link_speed > 90000000 and data.speed < 4700000000 and len(low_high) == 0:
+                  data.speed = 5200000001                
+                elif data.link_speed > 90000000 and data.speed < 5200000000 and len(med_high) == 0:
+                  data.speed = 5500000001                
+                elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) == 0:
+                  data.link_speed = 30000000
+                  data.speed = 5200000001
+                
+              task.set_time_started()
+              sent_tasks.append(task)
+          else:
+            task = tasks[0]
+            task.set_time_started()
+            sent_tasks.append(task)
+            tasks.remove(task)
+          
           #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-          sent_tasks.append(task)
-          tasks.remove(task)
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
