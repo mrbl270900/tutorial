@@ -171,25 +171,25 @@ def master(*args):
               elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
                 task = med_low[0]
                 med_low.remove(task)
-              elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) > 0:
+              elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
                 task = high_low[0]
                 high_low.remove(task)
-              elif data.link_speed < 65000000 and data.speed < 4700000001 and len(low_med) > 0:
+              elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
                 task = low_med[0]
                 low_med.remove(task)
-              elif data.link_speed < 65000000 and data.speed < 5200000001 and len(med_med) > 0:
+              elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
                 task = med_med[0]
                 med_med.remove(task)
-              elif data.link_speed < 65000000 and data.speed > 5500000000 and len(high_med) > 0:
+              elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
                 task = high_med[0]
                 high_med.remove(task)
-              elif data.link_speed > 90000000 and data.speed < 4700000001 and len(low_high) > 0:
+              elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
                 task = low_high[0]
                 low_high.remove(task)
-              elif data.link_speed > 90000000 and data.speed < 5200000001 and len(med_high) > 0:
+              elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
                 task = med_high[0]
                 med_high.remove(task)
-              elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) > 0:
+              elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
                 task = high_high[0]
                 high_high.remove(task)
               else:
@@ -197,21 +197,21 @@ def master(*args):
                   data.speed = 5200000001                  
                 elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) == 0:
+                elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
                   data.link_speed = 65000000
                   data.speed = 5200000001  
-                elif data.link_speed < 65000000 and data.speed < 4700000001 and len(low_med) == 0:
+                elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
                   data.speed = 5200000001                  
-                elif data.link_speed < 65000000 and data.speed < 5200000001 and len(med_med) == 0:
+                elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed < 65000000 and data.speed > 5500000000 and len(high_med) == 0:
+                elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
                   data.link_speed = 90000000
                   data.speed = 5200000001                  
-                elif data.link_speed > 90000000 and data.speed < 4700000001 and len(low_high) == 0:
+                elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
                   data.speed = 5200000001                  
-                elif data.link_speed > 90000000 and data.speed < 5200000001 and len(med_high) == 0:
+                elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) == 0:
+                elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
                   data.link_speed = 30000000
                   data.speed = 5200000001                                
             
@@ -238,25 +238,25 @@ def master(*args):
               elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
                 task = med_low[0]
                 med_low.remove(task)
-              elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) > 0:
+              elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
                 task = high_low[0]
                 high_low.remove(task)
-              elif data.link_speed < 65000000 and data.speed < 4700000001 and len(low_med) > 0:
+              elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
                 task = low_med[0]
                 low_med.remove(task)
-              elif data.link_speed < 65000000 and data.speed < 5200000001 and len(med_med) > 0:
+              elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
                 task = med_med[0]
                 med_med.remove(task)
-              elif data.link_speed < 65000000 and data.speed > 5500000000 and len(high_med) > 0:
+              elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
                 task = high_med[0]
                 high_med.remove(task)
-              elif data.link_speed > 90000000 and data.speed < 4700000001 and len(low_high) > 0:
+              elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
                 task = low_high[0]
                 low_high.remove(task)
-              elif data.link_speed > 90000000 and data.speed < 5200000001 and len(med_high) > 0:
+              elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
                 task = med_high[0]
                 med_high.remove(task)
-              elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) > 0:
+              elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
                 task = high_high[0]
                 high_high.remove(task)
               else:
@@ -264,21 +264,21 @@ def master(*args):
                   data.speed = 5200000001                  
                 elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed < 30000001 and data.speed > 5500000000 and len(high_low) == 0:
+                elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
                   data.link_speed = 65000000
                   data.speed = 5200000001  
-                elif data.link_speed < 65000000 and data.speed < 4700000001 and len(low_med) == 0:
+                elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
                   data.speed = 5200000001                  
-                elif data.link_speed < 65000000 and data.speed < 5200000001 and len(med_med) == 0:
+                elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed < 65000000 and data.speed > 5500000000 and len(high_med) == 0:
+                elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
                   data.link_speed = 90000000
                   data.speed = 5200000001                  
-                elif data.link_speed > 90000000 and data.speed < 4700000001 and len(low_high) == 0:
+                elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
                   data.speed = 5200000001                  
-                elif data.link_speed > 90000000 and data.speed < 5200000001 and len(med_high) == 0:
+                elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
                   data.speed = 5500000001                  
-                elif data.link_speed > 90000000 and data.speed > 5500000000 and len(high_high) == 0:
+                elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
                   data.link_speed = 30000000
                   data.speed = 5200000001
                 
