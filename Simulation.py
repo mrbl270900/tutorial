@@ -231,7 +231,7 @@ def master(*args):
             task.set_time_started()
             sent_tasks.append(task)
             tasks.remove(task)
-          #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
@@ -299,7 +299,7 @@ def master(*args):
             sent_tasks.append(task)
             tasks.remove(task)
           
-          #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+          this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
