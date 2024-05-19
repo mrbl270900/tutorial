@@ -7,7 +7,7 @@
 # Take this tutorial online: https://simgrid.org/doc/latest/Tutorial_Algorithms.html
 # ##################################################################################
 
-from simgrid import Actor, Engine, Mailbox, this_actor
+from simgrid import Actor, Engine, Mailbox, this_actor, Link, Host
 import time
 import sys
 import random
@@ -30,13 +30,17 @@ def sort_full_size(val):
   return val.computing_cost + val.communication_cost
 
 class Request_For_Task: #can add data about node here
-   def __init__(self, mailbox):
+   def __init__(self, mailbox, core_count, link_speed,):
       self.mailbox = mailbox
+      self.core_count = core_count
+      self.link_speed = link_speed
 
 class Request_With_Task_Done:
-   def __init__(self, mailbox, task): 
+   def __init__(self, mailbox, task, core_count, link_speed,): 
       self.mailbox = mailbox
       self.task = task # as the class task
+      self.core_count = core_count
+      self.link_speed = link_speed
 
 class Time:
   def get_time():
@@ -62,7 +66,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "big first"
+  alg = "catagory"
 
   #this_actor.info("Server started")
   #this_actor.info(str(tasks_count))
@@ -79,6 +83,40 @@ def master(*args):
   elif alg == "big first":
     this_actor.info("alg = big first")
     tasks.sort(key=sort_full_size)
+  elif alg == "catagory":
+    this_actor.info("alg = catagory")
+
+    low_low = []
+    med_low = []
+    high_low = []
+    low_med = []
+    med_med = []
+    high_med = []
+    low_high = []
+    med_high = []
+    high_high = []
+    
+    for task in tasks:
+
+      if task.computing_cost == 10000000000 and task.communication_cost == 5000000:
+        low_low.append(task)
+      elif task.computing_cost == 25000000000 and task.communication_cost == 5000000:
+        med_low.append(task)
+      elif task.computing_cost == 50000000000 and task.communication_cost == 5000000:
+        high_low.append(task)
+      if task.computing_cost == 10000000000 and task.communication_cost == 10000000:
+        low_med.append(task)
+      elif task.computing_cost == 25000000000 and task.communication_cost == 10000000:
+        med_med.append(task)
+      elif task.computing_cost == 50000000000 and task.communication_cost == 10000000:
+        high_med.append(task)
+      if task.computing_cost == 10000000000 and task.communication_cost == 20000000:
+        low_high.append(task)
+      elif task.computing_cost == 25000000000 and task.communication_cost == 20000000:
+        med_high.append(task)
+      else:
+        high_high.append(task)
+        
   else:
     this_actor.info("alg = random sorting")
     random.shuffle(tasks)
@@ -121,7 +159,11 @@ def master(*args):
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          task = tasks[0]
+          if alg == "catagory":
+            #logic for chosing task for worker
+            task = tasks[0]
+          else:
+            task = tasks[0]
           #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           task.set_time_started()
           sent_tasks.append(task)
@@ -212,7 +254,9 @@ def worker(*args):
             #this_actor.info(str(this_actor.get_host().name) + " turning off")
             this_actor.sleep_for(30)
             time_started = Time.get_time()
-          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task), 50)
+          worker_number = Host.current().name[8: len(Host.current().name)]
+          this_actor.info(worker_number)
+          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().core_count, Link.by_name(worker_number)), 50)
           comm.wait_for(5)
           #this_actor.info("asked for task")
             
