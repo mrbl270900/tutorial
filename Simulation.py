@@ -30,16 +30,16 @@ def sort_full_size(val):
   return val.computing_cost + val.communication_cost
 
 class Request_For_Task: #can add data about node here
-   def __init__(self, mailbox, core_count, link_speed,):
+   def __init__(self, mailbox, speed, link_speed,):
       self.mailbox = mailbox
-      self.core_count = core_count
+      self.speed = speed
       self.link_speed = link_speed
 
 class Request_With_Task_Done:
-   def __init__(self, mailbox, task, core_count, link_speed,): 
+   def __init__(self, mailbox, task, speed, link_speed,): 
       self.mailbox = mailbox
       self.task = task # as the class task
-      self.core_count = core_count
+      self.speed = speed
       self.link_speed = link_speed
 
 class Time:
@@ -161,8 +161,8 @@ def master(*args):
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if alg == "catagory":
             #logic for chosing task for worker
-            this_actor.info("link speed" + str(data.link_speed))
-            this_actor.info("core count" + str(data.core_count))
+            this_actor.info("link speed " + str(data.link_speed))
+            this_actor.info("speed " + str(data.speed))
 
             task = tasks[0]
           else:
@@ -232,7 +232,7 @@ def worker(*args):
       if not_asked_for_task:
         #this_actor.info("I'm trying to send a request for a task")
         worker_number = Host.current().name[6: len(Host.current().name)]
-        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().core_count, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
+        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
         comm.wait_for(5)
         not_asked_for_task = False
         
@@ -259,7 +259,7 @@ def worker(*args):
             this_actor.sleep_for(30)
             time_started = Time.get_time()
           worker_number = Host.current().name[6: len(Host.current().name)]
-          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().core_count, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
+          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
           comm.wait_for(5)
           #this_actor.info("asked for task")
             
