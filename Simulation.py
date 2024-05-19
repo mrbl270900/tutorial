@@ -164,6 +164,7 @@ def master(*args):
             #find right task if avalibul if not give close task
             task = None
             while task == None:
+              this_actor.info("looping")
               if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
                 task = low_low[0]
                 low_low.remove(task)
