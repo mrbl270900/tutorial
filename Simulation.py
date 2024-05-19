@@ -161,6 +161,9 @@ def master(*args):
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if alg == "catagory":
             #logic for chosing task for worker
+            this_actor.info("link speed" + str(data.link_speed))
+            this_actor.info("core count" + str(data.core_count))
+
             task = tasks[0]
           else:
             task = tasks[0]
@@ -229,8 +232,7 @@ def worker(*args):
       if not_asked_for_task:
         #this_actor.info("I'm trying to send a request for a task")
         worker_number = Host.current().name[6: len(Host.current().name)]
-        this_actor.info(worker_number)
-        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().core_count, Link.by_name(worker_number)), 50)
+        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().core_count, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
         comm.wait_for(5)
         not_asked_for_task = False
         
@@ -257,8 +259,7 @@ def worker(*args):
             this_actor.sleep_for(30)
             time_started = Time.get_time()
           worker_number = Host.current().name[6: len(Host.current().name)]
-          this_actor.info(worker_number)
-          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().core_count, Link.by_name(worker_number)), 50)
+          comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().core_count, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
           comm.wait_for(5)
           #this_actor.info("asked for task")
             
