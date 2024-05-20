@@ -262,7 +262,8 @@ def master(*args):
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          sent_tasks.remove(data.task)
+          if data.task in sent_tasks:
+            sent_tasks.remove(data.task)
           task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
