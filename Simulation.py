@@ -343,7 +343,7 @@ def worker(*args):
         comm_get = mailbox.get_async()
         comm_get.wait_for(5)
         chunked_task = comm_get.get_payload()
-        this_actor.info("task got: " + str(task))
+        this_actor.info("task got: " + str(chunked_task))
 
         if chunked_task == "wait":
           not_asked_for_task = True
