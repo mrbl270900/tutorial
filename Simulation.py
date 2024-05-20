@@ -58,43 +58,53 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     #logic for chosing task for worker
     #find right task if avalibul if not give close task
     task = None
-    while task == None:
+    done = False
+    while not done:
       if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
         this_actor.info("lowlow")
-        low_low.remove(low_low[0])
         task = low_low[0]
+        low_low.remove(low_low[0])
+        done = True
       elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
         this_actor.info("medlow")
-        med_low.remove(med_low[0])
         task = med_low[0]
+        med_low.remove(med_low[0])
+        done = True
       elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
         this_actor.info("highlow")
-        high_low.remove(high_low[0])
         task = high_low[0]
+        high_low.remove(high_low[0])
+        done = True
       elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
         this_actor.info("lowmed")
-        low_med.remove(low_med[0])
         task = low_med[0]
+        low_med.remove(low_med[0])
+        done = True
       elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
         this_actor.info("medmed")
-        med_med.remove(med_med[0])
         task = med_med[0]
+        med_med.remove(med_med[0])
+        done = True
       elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
         this_actor.info("highmed")
-        high_med.remove(high_med[0])
         task = high_med[0]
+        high_med.remove(high_med[0])
+        done = True
       elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
         this_actor.info("lowhigh")
-        low_high.remove(low_high[0])
         task = low_high[0]
+        low_high.remove(low_high[0])
+        done = True
       elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
         this_actor.info("medhigh")
-        med_high.remove(med_high[0])
         task = med_high[0]
+        med_high.remove(med_high[0])
+        done = True
       elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
         this_actor.info("highhigh")
-        high_high.remove(high_high[0])
         task = high_high[0]
+        high_high.remove(high_high[0])
+        done = True
       else:
         if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) == 0:
           data.speed = 5200000001                  
