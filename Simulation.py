@@ -278,7 +278,6 @@ def master(*args):
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          this_actor.info(str(worker_mailbox))
           task = get_task(data)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
