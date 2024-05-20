@@ -126,7 +126,7 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
         elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
           data.link_speed = 30000000
           data.speed = 4700000000
-            
+
     task.set_time_started()
     sent_tasks.append(task)
   else:
