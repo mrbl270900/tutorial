@@ -151,6 +151,15 @@ def master(*args):
   sending_comms = []
   not_done = True
   alg = ""
+  low_low = []
+  med_low = []
+  high_low = []
+  low_med = []
+  med_med = []
+  high_med = []
+  low_high = []
+  med_high = []
+  high_high = []
 
   this_actor.info("Server started")
   this_actor.info(str(tasks_count))
@@ -170,18 +179,7 @@ def master(*args):
   elif alg == "catagory":
     this_actor.info("alg = catagory")
 
-    low_low = []
-    med_low = []
-    high_low = []
-    low_med = []
-    med_med = []
-    high_med = []
-    low_high = []
-    med_high = []
-    high_high = []
-    
     for task in tasks:
-
       if task.computing_cost == 10000000000 and task.communication_cost == 5000000:
         low_low.append(task)
       elif task.computing_cost == 25000000000 and task.communication_cost == 5000000:
