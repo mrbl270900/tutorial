@@ -52,6 +52,103 @@ def computing_cost_sort(e):
 def tasknr(e):
   return e.tasknr
 
+tasks = []
+sent_tasks = []
+alg = ""
+low_low = []
+med_low = []
+high_low = []
+low_med = []
+med_med = []
+high_med = []
+low_high = []
+med_high = []
+high_high = []
+
+def get_task(data):
+  if alg == "catagory":
+    this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
+    #logic for chosing task for worker
+    #find right task if avalibul if not give close task
+    task = None
+    while task == None:
+      if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
+        this_actor.info("lowlow")
+        task = low_low[0]
+        low_low.remove(task)
+        tasks.remove(task)
+      elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
+        this_actor.info("medlow")
+        task = med_low[0]
+        med_low.remove(task)
+        tasks.remove(task)
+      elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
+        this_actor.info("highlow")
+        task = high_low[0]
+        high_low.remove(task)
+        tasks.remove(task)
+      elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
+        this_actor.info("lowmed")
+        task = low_med[0]
+        low_med.remove(task)
+        tasks.remove(task)
+      elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
+        this_actor.info("medmed")
+        task = med_med[0]
+        med_med.remove(task)
+        tasks.remove(task)
+      elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
+        this_actor.info("highmed")
+        task = high_med[0]
+        high_med.remove(task)
+        tasks.remove(task)
+      elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
+        this_actor.info("lowhigh")
+        task = low_high[0]
+        low_high.remove(task)
+        tasks.remove(task)
+      elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
+        this_actor.info("medhigh")
+        task = med_high[0]
+        med_high.remove(task)
+        tasks.remove(task)
+      elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
+        this_actor.info("highhigh")
+        task = high_high[0]
+        high_high.remove(task)
+        tasks.remove(task)
+      else:
+        if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) == 0:
+          data.speed = 5200000001                  
+        elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
+          data.speed = 5500000001                  
+        elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
+          data.link_speed = 65000000
+          data.speed = 5200000001  
+        elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
+          data.speed = 5200000001                  
+        elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
+          data.speed = 5500000001                  
+        elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
+          data.link_speed = 90000000
+          data.speed = 5200000001                  
+        elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
+          data.speed = 5200000001                  
+        elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
+          data.speed = 5500000001                  
+        elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
+          data.link_speed = 30000000
+          data.speed = 5200000001                             
+            
+    task.set_time_started()
+    sent_tasks.append(task)
+  else:
+    task = tasks[0]
+    task.set_time_started()
+    sent_tasks.append(task)
+    tasks.remove(task)
+
+  return task
 
 # master-begin
 def master(*args):
@@ -181,173 +278,14 @@ def master(*args):
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
-          if alg == "catagory":
-            this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
-            #logic for chosing task for worker
-            #find right task if avalibul if not give close task
-            task = None
-            while task == None:
-              if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
-                this_actor.info("lowlow")
-                task = low_low[0]
-                low_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
-                this_actor.info("medlow")
-                task = med_low[0]
-                med_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
-                this_actor.info("highlow")
-                task = high_low[0]
-                high_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
-                this_actor.info("lowmed")
-                task = low_med[0]
-                low_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
-                this_actor.info("medmed")
-                task = med_med[0]
-                med_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
-                this_actor.info("highmed")
-                task = high_med[0]
-                high_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
-                this_actor.info("lowhigh")
-                task = low_high[0]
-                low_high.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
-                this_actor.info("medhigh")
-                task = med_high[0]
-                med_high.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
-                this_actor.info("highhigh")
-                task = high_high[0]
-                high_high.remove(task)
-                tasks.remove(task)
-              else:
-                if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
-                  data.link_speed = 65000000
-                  data.speed = 5200000001  
-                elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
-                  data.link_speed = 90000000
-                  data.speed = 5200000001                  
-                elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
-                  data.link_speed = 30000000
-                  data.speed = 5200000001                             
-            
-            task.set_time_started()
-            sent_tasks.append(task)
-          else:
-            task = tasks[0]
-            task.set_time_started()
-            sent_tasks.append(task)
-            tasks.remove(task)
+          task = get_task(data)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           sent_tasks.remove(data.task)
-          if alg == "catagory":
-            #find right task if avalibul if not give close task
-            task = None
-            while task == None:
-              if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
-                this_actor.info("lowlow")
-                task = low_low[0]
-                low_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
-                this_actor.info("medlow")
-                task = med_low[0]
-                med_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
-                this_actor.info("highlow")
-                task = high_low[0]
-                high_low.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
-                this_actor.info("lowmed")
-                task = low_med[0]
-                low_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
-                this_actor.info("medmed")
-                task = med_med[0]
-                med_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
-                this_actor.info("highmed")
-                task = high_med[0]
-                high_med.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
-                this_actor.info("lowhigh")
-                task = low_high[0]
-                low_high.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
-                this_actor.info("medhigh")
-                task = med_high[0]
-                med_high.remove(task)
-                tasks.remove(task)
-              elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
-                this_actor.info("highhigh")
-                task = high_high[0]
-                high_high.remove(task)
-                tasks.remove(task)
-              else:
-                if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
-                  data.link_speed = 65000000
-                  data.speed = 5200000001  
-                elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
-                  data.link_speed = 90000000
-                  data.speed = 5200000001                  
-                elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
-                  data.speed = 5200000001                  
-                elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
-                  data.speed = 5500000001                  
-                elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
-                  data.link_speed = 30000000
-                  data.speed = 5200000001
-                
-              task.set_time_started()
-              sent_tasks.append(task)
-          else:
-            task = tasks[0]
-            task.set_time_started()
-            sent_tasks.append(task)
-            tasks.remove(task)
-          
+          task = get_task(data)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
