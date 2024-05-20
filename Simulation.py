@@ -198,18 +198,6 @@ def master(*args):
         med_high.append(task)
       elif task.computing_cost == 50000000000 and task.communication_cost == 20000000:
         high_high.append(task)
-      else:
-        this_actor.info("miss")
-      
-    this_actor.info(str(len(low_low)))
-    this_actor.info(str(len(med_low)))
-    this_actor.info(str(len(high_low)))
-    this_actor.info(str(len(low_med)))
-    this_actor.info(str(len(med_med)))
-    this_actor.info(str(len(high_med)))
-    this_actor.info(str(len(low_high)))
-    this_actor.info(str(len(med_high)))
-    this_actor.info(str(len(high_high)))
         
   else:
     this_actor.info("alg = random sorting")
@@ -242,17 +230,17 @@ def master(*args):
                 med_low.append(task)
               elif task.computing_cost == 50000000000 and task.communication_cost == 5000000:
                 high_low.append(task)
-              if task.computing_cost == 10000000000 and task.communication_cost == 10000000:
+              elif task.computing_cost == 10000000000 and task.communication_cost == 10000000:
                 low_med.append(task)
               elif task.computing_cost == 25000000000 and task.communication_cost == 10000000:
                 med_med.append(task)
               elif task.computing_cost == 50000000000 and task.communication_cost == 10000000:
                 high_med.append(task)
-              if task.computing_cost == 10000000000 and task.communication_cost == 20000000:
+              elif task.computing_cost == 10000000000 and task.communication_cost == 20000000:
                 low_high.append(task)
               elif task.computing_cost == 25000000000 and task.communication_cost == 20000000:
                 med_high.append(task)
-              else:
+              elif task.computing_cost == 50000000000 and task.communication_cost == 20000000:
                 high_high.append(task)
             else:
               tasks.append(task)
