@@ -264,38 +264,47 @@ def master(*args):
             task = None
             while task == None:
               if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) > 0:
+                this_actor.info("lowlow")
                 task = low_low[0]
                 low_low.remove(task)
                 tasks.remove(task)
               elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) > 0:
+                this_actor.info("medlow")
                 task = med_low[0]
                 med_low.remove(task)
                 tasks.remove(task)
               elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) > 0:
+                this_actor.info("highlow")
                 task = high_low[0]
                 high_low.remove(task)
                 tasks.remove(task)
               elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) > 0:
+                this_actor.info("lowmed")
                 task = low_med[0]
                 low_med.remove(task)
                 tasks.remove(task)
               elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) > 0:
+                this_actor.info("medmed")
                 task = med_med[0]
                 med_med.remove(task)
                 tasks.remove(task)
               elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) > 0:
+                this_actor.info("highmed")
                 task = high_med[0]
                 high_med.remove(task)
                 tasks.remove(task)
               elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) > 0:
+                this_actor.info("lowhigh")
                 task = low_high[0]
                 low_high.remove(task)
                 tasks.remove(task)
               elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) > 0:
+                this_actor.info("medhigh")
                 task = med_high[0]
                 med_high.remove(task)
                 tasks.remove(task)
               elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) > 0:
+                this_actor.info("highhigh")
                 task = high_high[0]
                 high_high.remove(task)
                 tasks.remove(task)
