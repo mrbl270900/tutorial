@@ -52,20 +52,7 @@ def computing_cost_sort(e):
 def tasknr(e):
   return e.tasknr
 
-tasks = []
-sent_tasks = []
-alg = ""
-low_low = []
-med_low = []
-high_low = []
-low_med = []
-med_med = []
-high_med = []
-low_high = []
-med_high = []
-high_high = []
-
-def get_task(data):
+def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high):
   if alg == "catagory":
     this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
     #logic for chosing task for worker
@@ -279,14 +266,14 @@ def master(*args):
         if len(tasks) > 0 and type(data) == Request_For_Task:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info(str(worker_mailbox))
-          task = get_task(data)
+          task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           sent_tasks.remove(data.task)
-          task = get_task(data)
+          task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
           this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async(task, task.communication_cost))
 
