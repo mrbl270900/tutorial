@@ -355,6 +355,7 @@ def worker(*args):
               this_actor.info(str(this_actor.get_host().name) + " turning off")
               this_actor.sleep_for(30)
               time_started = Time.get_time()
+              break
             this_actor.info("running:" + str(task.tasknr))
             this_actor.execute(task.computing_cost)
             this_actor.info("done with task:" + str(task.tasknr))
@@ -362,6 +363,7 @@ def worker(*args):
               this_actor.info(str(this_actor.get_host().name) + " turning off")
               this_actor.sleep_for(30)
               time_started = Time.get_time()
+              break
             worker_number = Host.current().name[6: len(Host.current().name)]
             comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
             comm.wait_for(5)
