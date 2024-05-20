@@ -186,13 +186,13 @@ def master(*args):
         med_low.append(task)
       elif task.computing_cost == 50000000000 and task.communication_cost == 5000000:
         high_low.append(task)
-      if task.computing_cost == 10000000000 and task.communication_cost == 10000000:
+      elif task.computing_cost == 10000000000 and task.communication_cost == 10000000:
         low_med.append(task)
       elif task.computing_cost == 25000000000 and task.communication_cost == 10000000:
         med_med.append(task)
       elif task.computing_cost == 50000000000 and task.communication_cost == 10000000:
         high_med.append(task)
-      if task.computing_cost == 10000000000 and task.communication_cost == 20000000:
+      elif task.computing_cost == 10000000000 and task.communication_cost == 20000000:
         low_high.append(task)
       elif task.computing_cost == 25000000000 and task.communication_cost == 20000000:
         med_high.append(task)
