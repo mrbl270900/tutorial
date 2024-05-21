@@ -10,7 +10,7 @@ platform.set('version', '4.1')
 
 amount_workers = 100 # 100 workers 
 
-amount_tasks = 10000 # 10 thosund task
+amount_tasks = 100000 # 100 thosund task
 
 task_avg_prosesing_size = 25000000000
 
@@ -57,9 +57,9 @@ argument.set('value', str(task_avg_comunication_size)) # is in bits so 10 millio
 #setting op nodes and add arguments to nodes here also
 
 task_prosesing_cost_type = [
-    ("small", 10000000000), #small
-    ("med", 25000000000), #med
-    ("big", 50000000000) #big
+    ("small", 1000000000), #small
+    ("med", 2500000000), #med
+    ("big", 5000000000) #big
     ]
 
 task_comunication_cost_type = [
