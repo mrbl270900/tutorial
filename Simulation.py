@@ -54,7 +54,7 @@ def tasknr(e):
 
 def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high):
   if alg == "catagory":
-    #this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
+    this_actor.info("data.speed "+ str(data.speed) + "  data.link_speed " + str(data.link_speed))
     #logic for chosing task for worker
     #find right task if avalibul if not give close task
     task = None
