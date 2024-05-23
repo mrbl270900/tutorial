@@ -129,7 +129,6 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
           data.speed = 4700000000
         else:
           return "wait"
-
     tasks.remove(task)
     task.set_time_started()
     sent_tasks.append(task)
