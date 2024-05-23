@@ -259,7 +259,7 @@ def master(*args):
             sending_comms.remove(comm)
       
       comm_get = server_mailbox.get_async()
-      comm_get.wait()
+      comm_get.wait_for(60)
       
       if comm_get.test():
         data = comm_get.get_payload()
