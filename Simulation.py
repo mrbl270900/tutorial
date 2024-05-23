@@ -107,28 +107,26 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
         done = True
       else:
         if data.link_speed < 30000001 and data.speed < 4700000001 and len(low_low) == 0:
-          data.speed = 5200000001                  
+          data.speed = 5200000000
         elif data.link_speed < 30000001 and data.speed < 5200000001 and len(med_low) == 0:
-          data.speed = 5500000001                  
+          data.speed = 5500000001
         elif data.link_speed < 30000001 and data.speed > 5200000000 and len(high_low) == 0:
           data.link_speed = 65000000
-          data.speed = 5200000001  
+          data.speed = 4700000000
         elif data.link_speed < 65000001 and data.speed < 4700000001 and len(low_med) == 0:
-          data.speed = 5200000001                  
+          data.speed = 5200000000
         elif data.link_speed < 65000001 and data.speed < 5200000001 and len(med_med) == 0:
-          data.speed = 5500000001                  
+          data.speed = 5500000001
         elif data.link_speed < 65000001 and data.speed > 5200000000 and len(high_med) == 0:
           data.link_speed = 90000000
-          data.speed = 5200000001                  
+          data.speed = 4700000000
         elif data.link_speed > 65000000 and data.speed < 4700000001 and len(low_high) == 0:
-          data.speed = 5200000001                  
+          data.speed = 5200000000
         elif data.link_speed > 65000000 and data.speed < 5200000001 and len(med_high) == 0:
-          data.speed = 5500000001                  
+          data.speed = 5500000001
         elif data.link_speed > 65000000 and data.speed > 5200000000 and len(high_high) == 0:
           data.link_speed = 30000000
           data.speed = 4700000000
-        else:
-          return "wait"
     tasks.remove(task)
     task.set_time_started()
     sent_tasks.append(task)
@@ -259,7 +257,7 @@ def master(*args):
             sending_comms.remove(comm)
       
       comm_get = server_mailbox.get_async()
-      comm_get.wait_for(60)
+      comm_get.wait()
       
       if comm_get.test():
         data = comm_get.get_payload()
