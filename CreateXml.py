@@ -10,7 +10,7 @@ platform.set('version', '4.1')
 
 amount_workers = 100 # 100 workers 
 
-amount_tasks = 10000 # 10 thosund task
+amount_tasks = 100000 # 10 thosund task
 
 task_avg_prosesing_size = 25000000000
 
