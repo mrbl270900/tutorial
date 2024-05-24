@@ -157,7 +157,7 @@ def master(*args):
   sending_comms = []
   not_done = True
   alg = "big first"
-  chunck = 1
+  chunck = 3
   low_low = []
   med_low = []
   high_low = []
