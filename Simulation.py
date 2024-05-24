@@ -216,9 +216,84 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
         sent_tasks.append(task)
         return_tasks.append(task)
       else:
-        this_actor.info("none")
-        link_speed_score = 0
-        speed_score = 0
+        if len(return_tasks) > 0:
+          this_actor.info("none")
+          link_speed_score = 0
+          speed_score = 0
+        elif len(high_high) > 0:
+          this_actor.info("highhigh")
+          task = high_high[0]
+          high_high.remove(high_high[0])
+          link_speed_score = link_speed_score - 20000000
+          speed_score = speed_score - 5000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(med_high) > 0:
+          this_actor.info("medhigh")
+          task = med_high[0]
+          med_high.remove(med_high[0])
+          link_speed_score = link_speed_score - 20000000
+          speed_score = speed_score - 2500000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(high_med) > 0:
+          this_actor.info("highmed")
+          task = high_med[0]
+          high_med.remove(high_med[0])
+          link_speed_score = link_speed_score - 10000000
+          speed_score = speed_score - 5000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(med_med) > 0:
+          this_actor.info("medmed")
+          task = med_med[0]
+          med_med.remove(med_med[0])
+          link_speed_score = link_speed_score - 10000000
+          speed_score = speed_score - 2500000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(low_med) > 0:
+          this_actor.info("lowmed")
+          task = low_med[0]
+          low_med.remove(low_med[0])
+          link_speed_score = link_speed_score - 5000000
+          speed_score = speed_score - 2500000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(med_low) > 0:
+          this_actor.info("medlow")
+          task = med_low[0]
+          med_low.remove(med_low[0])
+          link_speed_score = link_speed_score - 10000000
+          speed_score = speed_score - 1000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(low_low) > 0:
+          this_actor.info("lowlow")
+          task = low_low[0]
+          low_low.remove(low_low[0])
+          link_speed_score = link_speed_score - 5000000
+          speed_score = speed_score - 1000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        else:
+          this_actor.info("none")
+          link_speed_score = 0
+          speed_score = 0
 
     return return_tasks
   else:
