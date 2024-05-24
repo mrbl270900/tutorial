@@ -559,6 +559,7 @@ def worker(*args):
               comm.wait_for(5)
               this_actor.info("asked for task")
             else:
+              this_actor.info("sending done task to server")
               comm = server_mailbox.put_init(Request_With_Task_Done_No_New_Task(str(mailbox), task), 50)
               comm.wait_for(5)
             
