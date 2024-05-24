@@ -137,9 +137,9 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     sent_tasks.append(task)
     return task
   elif alg == "score":
-    dwelltime = 25 # is the dwell time of the web page
-    speed_score = data.speed * dwelltime
-    link_speed_score = data.link_speed * dwelltime
+    dwelltime = 25
+    speed_score = data.speed * (dwelltime/2) # divide by 2 to give some liway to send task back and forth 
+    link_speed_score = data.link_speed * (dwelltime/2)
     return_tasks = []
     this_actor.info(str(speed_score))
     this_actor.info(str(link_speed_score))
