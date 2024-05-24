@@ -373,7 +373,7 @@ def worker(*args):
               time_started = Time.get_time()
               break
             worker_number = Host.current().name[6: len(Host.current().name)]
-            if task == chunked_task[len(chunked_task)]:
+            if task == chunked_task[-1]:
               comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
               comm.wait_for(5)
               this_actor.info("asked for task")
