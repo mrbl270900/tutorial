@@ -141,6 +141,8 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     speed_score = data.speed * dwelltime
     link_speed_score = data.link_speed * dwelltime
     return_tasks = []
+    this_actor.info(speed_score)
+    this_actor.info(link_speed_score)
 
     while speed_score > 0 and link_speed_score > 0:
       if link_speed_score > 20000000 and speed_score > 5000000000 and len(high_high) == 0:
