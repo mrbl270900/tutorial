@@ -214,9 +214,6 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
         sent_tasks.append(task)
         return_tasks.append(task)
       else:
-        if len(return_tasks) == 0:
-          task = "wait"
-          return_tasks.append(task)
         link_speed_score = 0
         speed_score = 0
 
@@ -359,7 +356,6 @@ def master(*args):
           task_chunks = []
           if alg == "score":
             task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
-            sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
           else:
             for x in range(0, chunck):
               if len(tasks) > 0:
@@ -369,10 +365,10 @@ def master(*args):
               else:
                 break
 
-            if len(task_chunks) > 0:
-              sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
-            else:
-              sending_comms.append(worker_mailbox.put_async("wait", 50))
+          if len(task_chunks) > 0:
+            sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
+          else:
+            sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -381,7 +377,6 @@ def master(*args):
           task_chunks = []
           if alg == "score":
             task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
-            sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
           else:
             for x in range(0, chunck):
               if len(tasks) > 0:
@@ -391,10 +386,10 @@ def master(*args):
               else:
                 break
 
-            if len(task_chunks) > 0:
-              sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
-            else:
-              sending_comms.append(worker_mailbox.put_async("wait", 50))
+          if len(task_chunks) > 0:
+            sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
+          else:
+            sending_comms.append(worker_mailbox.put_async("wait", 50))
           
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
