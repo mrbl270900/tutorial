@@ -135,13 +135,98 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     tasks.remove(task)
     task.set_time_started()
     sent_tasks.append(task)
+    return task
+  elif alg == "score":
+    dwelltime = 25 # is the dwell time of the web page
+    speed_score = data.speed * dwelltime
+    link_speed_score = data.link_speed * dwelltime
+    return_tasks = []
+
+    while speed_score > 0 and link_speed_score > 0:
+      if link_speed_score > 20000000 and speed_score > 5000000000 and len(high_high) == 0:
+        #this_actor.info("highhigh")
+        task = high_high[0]
+        high_high.remove(high_high[0])
+        link_speed_score = link_speed_score - 20000000
+        speed_score = speed_score - 5000000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 20000000 and speed_score > 2500000000 and len(med_high) == 0:
+        #this_actor.info("medhigh")
+        task = med_high[0]
+        med_high.remove(med_high[0])
+        link_speed_score = link_speed_score - 20000000
+        speed_score = speed_score - 2500000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 10000000 and speed_score > 5000000000 and len(high_med) == 0:
+        #this_actor.info("highmed")
+        task = high_med[0]
+        high_med.remove(high_med[0])
+        link_speed_score = link_speed_score - 10000000
+        speed_score = speed_score - 5000000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 10000000 and speed_score > 2500000000 and len(med_med) == 0:
+        #this_actor.info("medmed")
+        task = med_med[0]
+        med_med.remove(med_med[0])
+        link_speed_score = link_speed_score - 10000000
+        speed_score = speed_score - 2500000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 5000000 and speed_score > 2500000000 and len(low_med) == 0:
+        #this_actor.info("lowmed")
+        task = low_med[0]
+        low_med.remove(low_med[0])
+        link_speed_score = link_speed_score - 5000000
+        speed_score = speed_score - 2500000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 10000000 and speed_score > 1000000000 and len(med_low) == 0:
+        #this_actor.info("medlow")
+        task = med_low[0]
+        med_low.remove(med_low[0])
+        link_speed_score = link_speed_score - 10000000
+        speed_score = speed_score - 1000000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      elif link_speed_score > 5000000 and speed_score > 1000000000 and len(low_low) == 0:
+        #this_actor.info("lowlow")
+        task = low_low[0]
+        low_low.remove(low_low[0])
+        link_speed_score = link_speed_score - 5000000
+        speed_score = speed_score - 1000000000
+        tasks.remove(task)
+        task.set_time_started()
+        sent_tasks.append(task)
+        return_tasks.append(task)
+      else:
+        if len(return_tasks) == 0:
+          task = "wait"
+          return_tasks.append(task)
+        link_speed_score = 0
+        speed_score = 0
+
+    return return_tasks
   else:
     task = tasks[0]
     task.set_time_started()
     sent_tasks.append(task)
     tasks.remove(task)
-
-  return task
+    return task
 
 # master-begin
 def master(*args):
@@ -156,8 +241,8 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "big first"
-  chunck = 3
+  alg = "score"
+  chunck = 1
   low_low = []
   med_low = []
   high_low = []
@@ -183,7 +268,7 @@ def master(*args):
   elif alg == "big first":
     this_actor.info("alg = big first")
     tasks.sort(key=sort_full_size)
-  elif alg == "catagory":
+  elif alg == "catagory" or alg == "score":
     this_actor.info("alg = catagory")
 
     for task in tasks:
@@ -272,36 +357,44 @@ def master(*args):
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           #this_actor.info(str(worker_mailbox))
           task_chunks = []
-          for x in range(0, chunck):
-            if len(tasks) > 0:
-              task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
-              #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-              task_chunks.append(task)
-            else:
-              break
-
-          if len(task_chunks) > 0:
+          if alg == "score":
+            task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
             sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
           else:
-            sending_comms.append(worker_mailbox.put_async("wait", 50))
+            for x in range(0, chunck):
+              if len(tasks) > 0:
+                task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
+                #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+                task_chunks.append(task)
+              else:
+                break
+
+            if len(task_chunks) > 0:
+              sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
+            else:
+              sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
           task_chunks = []
-          for x in range(0, chunck):
-            if len(tasks) > 0:
-              task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
-              #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-              task_chunks.append(task)
-            else:
-              break
-
-          if len(task_chunks) > 0:
+          if alg == "score":
+            task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
             sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
           else:
-            sending_comms.append(worker_mailbox.put_async("wait", 50))
+            for x in range(0, chunck):
+              if len(tasks) > 0:
+                task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
+                #this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
+                task_chunks.append(task)
+              else:
+                break
+
+            if len(task_chunks) > 0:
+              sending_comms.append(worker_mailbox.put_async(task_chunks, task.communication_cost))
+            else:
+              sending_comms.append(worker_mailbox.put_async("wait", 50))
           
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
