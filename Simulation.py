@@ -389,7 +389,7 @@ def master(*args):
             elif alg == "big first":
               tasks.append(task)
               tasks.sort(key=sort_full_size)
-            elif alg == "catagory":
+            elif alg == "catagory" or alg == "score":
               tasks.append(task)
               if task.computing_cost == 1000000000 and task.communication_cost == 5000000:
                 low_low.append(task)
