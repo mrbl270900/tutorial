@@ -156,7 +156,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "random"
+  alg = "catagory"
   chunck = 3
   low_low = []
   med_low = []
@@ -303,7 +303,7 @@ def master(*args):
           else:
             sending_comms.append(worker_mailbox.put_async("wait", 50))
           
-          
+
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if data.task in sent_tasks:
