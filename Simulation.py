@@ -350,6 +350,9 @@ def master(*args):
       this_actor.info("alg = score")
 
     for task in tasks:
+      print(task.tasknr)
+      print(task.computing_cost)
+      print(task.communication_cost)
       if task.computing_cost == 1000000000 and task.communication_cost == 5000000:
         low_low.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 5000000:
