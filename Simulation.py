@@ -357,7 +357,7 @@ def master(*args):
   sending_comms = []
   not_done = True
   alg = "random test"
-  chunck = 1
+  chunck = 10
   low_low = []
   med_low = []
   high_low = []
