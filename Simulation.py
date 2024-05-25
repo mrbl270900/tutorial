@@ -138,8 +138,8 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     return task
   elif alg == "score":
     dwelltime = 25
-    speed_score = data.speed * (dwelltime/2) # divide by 2 to give some liway to send task back and forth, for non stactic speeds 
-    link_speed_score = data.link_speed * (dwelltime/2)
+    speed_score = data.speed * (dwelltime/3) # divide by 3 to give some liway to send task back and forth, for non stactic speeds and also for comm/procseing cost not at same time
+    link_speed_score = data.link_speed * (dwelltime/3)
     return_tasks = []
     #this_actor.info(str(speed_score))
     #this_actor.info(str(link_speed_score))
@@ -356,7 +356,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "big first"
+  alg = "score"
   chunck = 10
   low_low = []
   med_low = []
