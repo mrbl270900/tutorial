@@ -273,6 +273,26 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
           task.set_time_started()
           sent_tasks.append(task)
           return_tasks.append(task)
+        elif len(low_high) > 0:
+          this_actor.info("lowhigh")
+          task = low_high[0]
+          low_high.remove(low_high[0])
+          link_speed_score = link_speed_score - 20000000
+          speed_score = speed_score - 1000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
+        elif len(high_low) > 0:
+          this_actor.info("highlow")
+          task = high_low[0]
+          high_low.remove(high_low[0])
+          link_speed_score = link_speed_score - 5000000
+          speed_score = speed_score - 5000000000
+          tasks.remove(task)
+          task.set_time_started()
+          sent_tasks.append(task)
+          return_tasks.append(task)
         elif len(med_med) > 0:
           this_actor.info("medmed")
           task = med_med[0]
