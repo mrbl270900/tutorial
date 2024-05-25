@@ -144,6 +144,9 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     this_actor.info(str(speed_score))
     this_actor.info(str(link_speed_score))
 
+    print(tasks[0].computing_cost)
+    print(tasks[0].communication_cost)
+
     while speed_score > 0 and link_speed_score > 0:
       if link_speed_score > 20000000 and speed_score > 5000000000 and len(high_high) > 0:
         this_actor.info("highhigh")
