@@ -453,6 +453,7 @@ def master(*args):
         this_actor.info(str(data))
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
+          print(len(tasks))
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info(str(worker_mailbox))
           task_chunks = []
