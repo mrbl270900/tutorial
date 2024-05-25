@@ -354,24 +354,42 @@ def master(*args):
       print(task.computing_cost)
       print(task.communication_cost)
       if task.computing_cost == 1000000000 and task.communication_cost == 5000000:
+        print("lowlow")
         low_low.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 5000000:
+        print("medlow")
         med_low.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 5000000:
+        print("highlow")
         high_low.append(task)
       elif task.computing_cost == 1000000000 and task.communication_cost == 10000000:
+        print("lowmed")
         low_med.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 10000000:
+        print("medmed")
         med_med.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 10000000:
+        print("highmed")
         high_med.append(task)
       elif task.computing_cost == 1000000000 and task.communication_cost == 20000000:
+        print("lowhigh")
         low_high.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 20000000:
+        print("medhigh")
         med_high.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 20000000:
+        print("highhigh")
         high_high.append(task)
-        
+    
+    print(len(low_low))
+    print(len(med_low))
+    print(len(high_low))
+    print(len(low_med))
+    print(len(med_med))
+    print(len(high_med))
+    print(len(low_high))
+    print(len(med_high))
+    print(len(high_high))
   else:
     this_actor.info("alg = random sorting")
     random.shuffle(tasks)
