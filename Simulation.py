@@ -138,7 +138,7 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     return task
   elif alg == "score":
     dwelltime = 25
-    speed_score = data.speed * (dwelltime/2) # divide by 2 to give some liway to send task back and forth 
+    speed_score = data.speed * (dwelltime/2) # divide by 2 to give some liway to send task back and forth, for non stactic speeds 
     link_speed_score = data.link_speed * (dwelltime/2)
     return_tasks = []
     this_actor.info(str(speed_score))
@@ -185,20 +185,20 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
         task.set_time_started()
         sent_tasks.append(task)
         return_tasks.append(task)
-      elif link_speed_score > 5000000 and speed_score > 2500000000 and len(low_med) > 0:
-        this_actor.info("lowmed")
-        task = low_med[0]
-        low_med.remove(low_med[0])
+      elif link_speed_score > 5000000 and speed_score > 2500000000 and len(med_low) > 0:
+        this_actor.info("medlow")
+        task = med_low[0]
+        med_low.remove(med_low[0])
         link_speed_score = link_speed_score - 5000000
         speed_score = speed_score - 2500000000
         tasks.remove(task)
         task.set_time_started()
         sent_tasks.append(task)
         return_tasks.append(task)
-      elif link_speed_score > 10000000 and speed_score > 1000000000 and len(med_low) > 0:
-        this_actor.info("medlow")
-        task = med_low[0]
-        med_low.remove(med_low[0])
+      elif link_speed_score > 10000000 and speed_score > 1000000000 and len(low_med) > 0:
+        this_actor.info("lowmed")
+        task = low_med[0]
+        low_med.remove(low_med[0])
         link_speed_score = link_speed_score - 10000000
         speed_score = speed_score - 1000000000
         tasks.remove(task)
@@ -260,20 +260,20 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
           task.set_time_started()
           sent_tasks.append(task)
           return_tasks.append(task)
-        elif len(low_med) > 0:
-          this_actor.info("lowmed")
-          task = low_med[0]
-          low_med.remove(low_med[0])
+        elif len(med_low) > 0:
+          this_actor.info("medlow")
+          task = med_low[0]
+          med_low.remove(med_low[0])
           link_speed_score = link_speed_score - 5000000
           speed_score = speed_score - 2500000000
           tasks.remove(task)
           task.set_time_started()
           sent_tasks.append(task)
           return_tasks.append(task)
-        elif len(med_low) > 0:
-          this_actor.info("medlow")
-          task = med_low[0]
-          med_low.remove(med_low[0])
+        elif len(low_med) > 0:
+          this_actor.info("lowmed")
+          task = low_med[0]
+          low_med.remove(low_med[0])
           link_speed_score = link_speed_score - 10000000
           speed_score = speed_score - 1000000000
           tasks.remove(task)
@@ -344,7 +344,10 @@ def master(*args):
     this_actor.info("alg = big first")
     tasks.sort(key=sort_full_size)
   elif alg == "catagory" or alg == "score":
-    this_actor.info("alg = catagory")
+    if alg == "catagory":
+      this_actor.info("alg = catagory")
+    else:
+      this_actor.info("alg = score")
 
     for task in tasks:
       if task.computing_cost == 1000000000 and task.communication_cost == 5000000:
@@ -373,7 +376,7 @@ def master(*args):
 
   this_actor.info("tasks preprosesed")
 
-  while not_done: #len(tasks) > 0 or len(sent_tasks) > 0 or len(sending_comms) > 0:
+  while not_done:
     try:
       if Time.get_time() - last_run_sent_tasks_check > 10:
         last_run_sent_tasks_check = Time.get_time()
