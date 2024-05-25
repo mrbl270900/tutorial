@@ -144,9 +144,6 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     this_actor.info(str(speed_score))
     this_actor.info(str(link_speed_score))
 
-    print(tasks[0].computing_cost)
-    print(tasks[0].communication_cost)
-
     while speed_score > 0 and link_speed_score > 0:
       if link_speed_score > 20000000 and speed_score > 5000000000 and len(high_high) > 0:
         this_actor.info("highhigh")
@@ -393,46 +390,24 @@ def master(*args):
       this_actor.info("alg = score")
 
     for task in tasks:
-      print(task.tasknr)
-      print(task.computing_cost)
-      print(task.communication_cost)
       if task.computing_cost == 1000000000 and task.communication_cost == 5000000:
-        print("lowlow")
         low_low.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 5000000:
-        print("medlow")
         med_low.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 5000000:
-        print("highlow")
         high_low.append(task)
       elif task.computing_cost == 1000000000 and task.communication_cost == 10000000:
-        print("lowmed")
         low_med.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 10000000:
-        print("medmed")
         med_med.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 10000000:
-        print("highmed")
         high_med.append(task)
       elif task.computing_cost == 1000000000 and task.communication_cost == 20000000:
-        print("lowhigh")
         low_high.append(task)
       elif task.computing_cost == 2500000000 and task.communication_cost == 20000000:
-        print("medhigh")
         med_high.append(task)
       elif task.computing_cost == 5000000000 and task.communication_cost == 20000000:
-        print("highhigh")
         high_high.append(task)
-    
-    print(len(low_low))
-    print(len(med_low))
-    print(len(high_low))
-    print(len(low_med))
-    print(len(med_med))
-    print(len(high_med))
-    print(len(low_high))
-    print(len(med_high))
-    print(len(high_high))
   else:
     this_actor.info("alg = random sorting")
     random.shuffle(tasks)
@@ -496,7 +471,6 @@ def master(*args):
         this_actor.info(str(data))
 
         if len(tasks) > 0 and type(data) == Request_For_Task:
-          print(len(tasks))
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           this_actor.info(str(worker_mailbox))
           task_chunks = []
