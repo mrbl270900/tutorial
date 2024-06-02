@@ -478,13 +478,13 @@ def master(*args):
           if alg == "score":
             task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
             for task in task_chunks:
-              communicate_cost = communicate_cost + task.communication_cost
+              communicate_cost = int(communicate_cost) + int(task.communication_cost)
           else:
             for x in range(0, chunck):
               if len(tasks) > 0:
                 task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
                 this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-                communicate_cost = communicate_cost + task.communication_cost
+                communicate_cost = int(communicate_cost) + int(task.communication_cost)
                 task_chunks.append(task)
               else:
                 break
@@ -503,13 +503,13 @@ def master(*args):
           if alg == "score":
             task_chunks = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
             for task in task_chunks:
-              communicate_cost = communicate_cost + task.communication_cost
+              communicate_cost = int(communicate_cost) + int(task.communication_cost)
           else:
             for x in range(0, chunck):
               if len(tasks) > 0:
                 task = get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, med_med, high_med, low_high, med_high, high_high)
                 this_actor.info("sending " + str(task.tasknr) + " to:" + str(data.mailbox)[8:-1])
-                communicate_cost = communicate_cost + task.communication_cost
+                communicate_cost = int(communicate_cost) + int(task.communication_cost)
                 task_chunks.append(task)
               else:
                 break
