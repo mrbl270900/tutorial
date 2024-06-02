@@ -63,9 +63,9 @@ task_prosesing_cost_type = [
     ]
 
 task_comunication_cost_type = [
-    ("small", 500000), #small
-    ("med", 1000000), #med 
-    ("big", 2000000) #big 
+    ("small", 5000000), #small
+    ("med", 10000000), #med 
+    ("big", 20000000) #big 
     ]
 
 task_pr_catagory = int(amount_tasks / (len(task_prosesing_cost_type) * len(task_comunication_cost_type)))
