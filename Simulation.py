@@ -490,6 +490,7 @@ def master(*args):
                 break
 
           if len(task_chunks) > 0:
+            this_actor.info(str(communicate_cost))
             sending_comms.append(worker_mailbox.put_async(task_chunks, communicate_cost))
           else:
             sending_comms.append(worker_mailbox.put_async("wait", 50))
@@ -514,6 +515,7 @@ def master(*args):
                 break
 
           if len(task_chunks) > 0:
+            this_actor.info(str(communicate_cost))
             sending_comms.append(worker_mailbox.put_async(task_chunks, communicate_cost))
           else:
             sending_comms.append(worker_mailbox.put_async("wait", 50))
