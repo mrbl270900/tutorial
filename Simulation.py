@@ -358,7 +358,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "score"
+  alg = "big first"
   chunck = 10
   low_low = []
   med_low = []
