@@ -57,15 +57,15 @@ argument.set('value', str(task_avg_comunication_size)) # is in bits so 10 millio
 #setting op nodes and add arguments to nodes here also
 
 task_prosesing_cost_type = [
-    ("small", 1000000000), #small
-    ("med", 2500000000), #med
-    ("big", 5000000000) #big
+    ("small", 2000000000), #small
+    ("med", 5000000000), #med
+    ("big", 10000000000) #big
     ]
 
 task_comunication_cost_type = [
-    ("small", 500000), #small
-    ("med", 1000000), #med 
-    ("big", 2000000) #big 
+    ("small", 1000000), #small
+    ("med", 2000000), #med 
+    ("big", 4000000) #big 
     ]
 
 task_pr_catagory = int(amount_tasks / (len(task_prosesing_cost_type) * len(task_comunication_cost_type)))
