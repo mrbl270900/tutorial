@@ -717,7 +717,7 @@ def master(*args):
             #this_actor.info(str(tasks_communicate_cost))
             sending_comms.append(worker_mailbox.put_async(task_chunks, tasks_communicate_cost))
           else:
-            sending_comms.append(worker_mailbox.put_async("wait", 50))
+            sending_comms.append(worker_mailbox.put_async("wait", 500))
 
         elif len(tasks) > 0 and type(data) == Request_With_Task_Done:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
@@ -744,7 +744,7 @@ def master(*args):
             #this_actor.info(str(tasks_communicate_cost))
             sending_comms.append(worker_mailbox.put_async(task_chunks, tasks_communicate_cost))
           else:
-            sending_comms.append(worker_mailbox.put_async("wait", 50))
+            sending_comms.append(worker_mailbox.put_async("wait", 500))
           
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
@@ -752,7 +752,7 @@ def master(*args):
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
+          sending_comms.append(worker_mailbox.put_async("wait", 500))
 
         elif type(data) == Request_With_Task_Done_No_New_Task:
           if data.task in sent_tasks:
@@ -761,7 +761,7 @@ def master(*args):
         elif len(tasks) == 0 and len(sent_tasks) > 0:
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 50))
+          sending_comms.append(worker_mailbox.put_async("wait", 500))
 
         else:
           Actor.kill_all()
@@ -801,7 +801,7 @@ def worker(*args):
       if not_asked_for_task:
         #this_actor.info("I'm trying to send a request for a task")
         worker_number = Host.current().name[6: len(Host.current().name)]
-        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
+        comm = server_mailbox.put_init(Request_For_Task(str(mailbox), this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 500)
         comm.wait_for(5)
         not_asked_for_task = False
         
@@ -832,12 +832,12 @@ def worker(*args):
               break
             worker_number = Host.current().name[6: len(Host.current().name)]
             if task == chunked_task[-1]:
-              comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 50)
+              comm = server_mailbox.put_init(Request_With_Task_Done(str(mailbox), task, this_actor.get_host().speed, Link.by_name(str(int(worker_number) + 1)).bandwidth), 500)
               comm.wait_for(5)
               #this_actor.info("asked for task")
             else:
               #this_actor.info("sending done task to server")
-              comm = server_mailbox.put_init(Request_With_Task_Done_No_New_Task(str(mailbox), task), 50)
+              comm = server_mailbox.put_init(Request_With_Task_Done_No_New_Task(str(mailbox), task), 500)
               comm.wait_for(5)
             
         else: # Stop when receiving an invalid compute_cost
