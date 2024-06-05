@@ -569,7 +569,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "smallest_score"
+  alg = "small first"
   chunck = 3
   low_low = []
   med_low = []
@@ -588,6 +588,8 @@ def master(*args):
   task_comm_small = 1000000
   task_comm_med = 2000000
   task_comm_big = 4000000
+
+  error_tasks = 0
 
   #this_actor.info("Server started")
   #this_actor.info(str(tasks_count))
@@ -656,6 +658,7 @@ def master(*args):
               tasks.sort(key=sort_full_size)
             elif alg == "catagory" or alg == "score" or alg == "smallest_score":
               tasks.append(task)
+              error_tasks = error_tasks + 1
               if task.computing_cost == task_proc_small and task.communication_cost == task_comm_small:
                 low_low.append(task)
               elif task.computing_cost == task_proc_med and task.communication_cost == task_comm_small:
@@ -773,7 +776,7 @@ def master(*args):
         test = "test"
         #this_actor.info(f"An error occurred in server: {e}")
 
-  this_actor.info("all taskes and workers done")
+  this_actor.info("all taskes and workers done with error tasks = " + str(error_tasks))
 # master-end
 
 # worker-begin
