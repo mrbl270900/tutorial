@@ -651,9 +651,11 @@ def master(*args):
             #this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
 
             if alg == "small first":
+              error_tasks = error_tasks + 1
               tasks.append(task)
               tasks.sort(reverse=True ,key=sort_full_size)
             elif alg == "big first":
+              error_tasks = error_tasks + 1
               tasks.append(task)
               tasks.sort(key=sort_full_size)
             elif alg == "catagory" or alg == "score" or alg == "smallest_score":
@@ -678,6 +680,7 @@ def master(*args):
               elif task.computing_cost == task_proc_big and task.communication_cost == task_comm_big:
                 high_high.append(task)
             else:
+              error_tasks = error_tasks + 1
               tasks.append(task)
               random.shuffle(tasks)
 
