@@ -779,7 +779,7 @@ def master(*args):
         test = "test"
         #this_actor.info(f"An error occurred in server: {e}")
 
-  this_actor.info("all taskes and workers done with error tasks = " + str(error_tasks) + ",")
+  this_actor.info("all taskes and workers done with")# error tasks = " + str(error_tasks) + ",")
 # master-end
 
 # worker-begin
