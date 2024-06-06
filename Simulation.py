@@ -569,7 +569,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "smallest_score"
+  alg = "small first"
   chunck = 3
   low_low = []
   med_low = []
@@ -754,6 +754,8 @@ def master(*args):
           
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
+          Actor.kill_all()
+          not_done = False
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
@@ -765,6 +767,8 @@ def master(*args):
             sent_tasks.remove(data.task)
 
         elif len(tasks) == 0 and len(sent_tasks) > 0:
+          Actor.kill_all()
+          not_done = False
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
           sending_comms.append(worker_mailbox.put_async("wait", 500))
@@ -779,7 +783,7 @@ def master(*args):
         test = "test"
         #this_actor.info(f"An error occurred in server: {e}")
 
-  this_actor.info("all taskes and workers done with")# error tasks = " + str(error_tasks) + ",")
+  this_actor.info("all taskes and workers done with error tasks = " + str(error_tasks) + ", sent tasks left = " + str(len(sent_tasks)))
 # master-end
 
 # worker-begin
