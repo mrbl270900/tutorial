@@ -760,7 +760,7 @@ def master(*args):
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 500))
+          #sending_comms.append(worker_mailbox.put_async("wait", 500))
 
         elif type(data) == Request_With_Task_Done_No_New_Task:
           if data.task in sent_tasks:
@@ -769,9 +769,9 @@ def master(*args):
         elif len(tasks) == 0 and len(sent_tasks) > 0:
           Actor.kill_all()
           not_done = False
-          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+          #worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          sending_comms.append(worker_mailbox.put_async("wait", 500))
+          #sending_comms.append(worker_mailbox.put_async("wait", 500))
 
         else:
           Actor.kill_all()
