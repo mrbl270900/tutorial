@@ -116,6 +116,7 @@ for x in range(0,amount_workers):
     actor.set('function', 'worker')
     statefile_string = stateFile_strings[x]
     argument = ET.SubElement(actor, "argument")
+    print(stateFile_strings_clean[x])
     argument.set('value', str(stateFile_strings_clean[x]))
 
 save_path_file = "ServerSetup.xml"
