@@ -148,9 +148,9 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     return task
   elif alg == "score":
     dwelltime = 25
-    speed_score = data.speed * (dwelltime/7) # divide by 6 to give some liway to send task back and forth, for non stactic speeds and 
+    speed_score = data.speed * (dwelltime/6) # divide by 6 to give some liway to send task back and forth, for non stactic speeds and 
     #also for comm/procseing cost as they are not ran at same time
-    link_speed_score = data.link_speed * (dwelltime/7)
+    link_speed_score = data.link_speed * (dwelltime/6)
     return_tasks = []
     #this_actor.info(str(speed_score))
     #this_actor.info(str(link_speed_score))
@@ -589,7 +589,7 @@ def master(*args):
   task_comm_med = 1000000
   task_comm_big = 2000000
 
-  error_tasks = 0
+  #error_tasks = 0
 
   #this_actor.info("Server started")
   #this_actor.info(str(tasks_count))
@@ -651,16 +651,16 @@ def master(*args):
             #this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
 
             if alg == "small first":
-              error_tasks = error_tasks + 1
+              #error_tasks = error_tasks + 1
               tasks.append(task)
               tasks.sort(reverse=True ,key=sort_full_size)
             elif alg == "big first":
-              error_tasks = error_tasks + 1
+              #error_tasks = error_tasks + 1
               tasks.append(task)
               tasks.sort(key=sort_full_size)
             elif alg == "catagory" or alg == "score" or alg == "smallest_score":
               tasks.append(task)
-              error_tasks = error_tasks + 1
+              #error_tasks = error_tasks + 1
               if task.computing_cost == task_proc_small and task.communication_cost == task_comm_small:
                 low_low.append(task)
               elif task.computing_cost == task_proc_med and task.communication_cost == task_comm_small:
@@ -680,7 +680,7 @@ def master(*args):
               elif task.computing_cost == task_proc_big and task.communication_cost == task_comm_big:
                 high_high.append(task)
             else:
-              error_tasks = error_tasks + 1
+              #error_tasks = error_tasks + 1
               tasks.append(task)
               random.shuffle(tasks)
 
@@ -754,24 +754,24 @@ def master(*args):
           
 
         elif len(tasks) == 0 and len(sent_tasks) > 0 and type(data) == Request_With_Task_Done:
-          Actor.kill_all()
+          #Actor.kill_all()
           not_done = False
           worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          #sending_comms.append(worker_mailbox.put_async("wait", 50))
+          sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         elif type(data) == Request_With_Task_Done_No_New_Task:
           if data.task in sent_tasks:
             sent_tasks.remove(data.task)
 
         elif len(tasks) == 0 and len(sent_tasks) > 0:
-          Actor.kill_all()
+          #Actor.kill_all()
           not_done = False
-          #worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
+          worker_mailbox = Mailbox.by_name(str(data.mailbox)[8:-1])
           #this_actor.info("sending wait to:" + str(data.mailbox)[8:-1])
-          #sending_comms.append(worker_mailbox.put_async("wait", 50))
+          sending_comms.append(worker_mailbox.put_async("wait", 50))
 
         else:
           Actor.kill_all()
@@ -782,8 +782,8 @@ def master(*args):
     except Exception as e:
         test = "test"
         #this_actor.info(f"An error occurred in server: {e}")
-
-  this_actor.info("all taskes and workers done with error tasks = " + str(error_tasks) + ", sent tasks left = " + str(len(sent_tasks)))
+  this_actor.info("all taskes and workers done")
+  #this_actor.info("all taskes and workers done with error tasks = " + str(error_tasks) + ", sent tasks left = " + str(len(sent_tasks)))
 # master-end
 
 # worker-begin
