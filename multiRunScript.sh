@@ -10,8 +10,8 @@ do
     echo "Running CreateXml.py - Iteration $i"
     python CreateXml.py
 
-    #echo "Running Simulation.py - Iteration $i"
-    #python Simulation.py NetworkSetup.xml ServerSetup.xml > temp_output.txt
+    echo "Running Simulation.py - Iteration $i"
+    python Simulation.py NetworkSetup.xml ServerSetup.xml > temp_output.txt
     #last_line=$(tail -n 1 temp_output.txt)
     #echo "$last_line"
     #last_lines_Sim+=("$last_line")
