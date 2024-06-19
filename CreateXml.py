@@ -100,13 +100,13 @@ for x in range(0,amount_tasks):
 
 #=========================================================================
 # Here is a list of strings to put in the generated state txt files 
-Standard_deviation = 38
+Standard_deviation = 16
 stateFile_strings = np.random.normal(0, Standard_deviation, amount_workers)
 stateFile_strings_clean = []
 for x in stateFile_strings:
     if x < 0:
         x = int(x) * -1
-    #print(str(int(x)) + ",")
+    print(str(int(x)) + ",")
     stateFile_strings_clean.append(int(x))
 
 
