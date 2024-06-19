@@ -106,7 +106,7 @@ stateFile_strings_clean = []
 for x in stateFile_strings:
     if x < 0:
         x = int(x) * -1
-    print(str(x) + ",")
+    print(str(int(x)) + ",")
     stateFile_strings_clean.append(int(x))
 
 
