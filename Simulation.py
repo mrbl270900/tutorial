@@ -147,7 +147,7 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
     sent_tasks.append(task)
     return task
   elif alg == "score":
-    dwelltime = 25
+    dwelltime = 60
     speed_score = data.speed * (dwelltime/6) # divide by 6 to give some liway to send task back and forth, for non stactic speeds and 
     #also for comm/procseing cost as they are not ran at same time
     link_speed_score = data.link_speed * (dwelltime/6)
@@ -348,10 +348,10 @@ def get_task(data, alg, sent_tasks, tasks, low_low, med_low, high_low, low_med, 
 
     return return_tasks
   elif alg == "smallest_score":
-    dwelltime = 25
-    speed_score = data.speed * (dwelltime/7) # divide by 6 to give some liway to send task back and forth, for non stactic speeds and 
+    dwelltime = 60
+    speed_score = data.speed * (dwelltime/5) # divide by 6 to give some liway to send task back and forth, for non stactic speeds and 
     #also for comm/procseing cost as they are not ran at same time
-    link_speed_score = data.link_speed * (dwelltime/7)
+    link_speed_score = data.link_speed * (dwelltime/5)
     return_tasks = []
     #this_actor.info(str(speed_score))
     #this_actor.info(str(link_speed_score))
@@ -569,7 +569,7 @@ def master(*args):
   last_run_sent_tasks_check = Time.get_time()
   sending_comms = []
   not_done = True
-  alg = "small first"
+  alg = "smallest_score"
   chunck = 3
   low_low = []
   med_low = []
@@ -647,7 +647,7 @@ def master(*args):
         #check for the tasks that have been issued if not done in 60 secunds
         for task in sent_tasks:
           task.set_time_pased()
-          if task.time_pased > 39:
+          if task.time_pased > 59:
             #this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
 
             if alg == "small first":
