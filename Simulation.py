@@ -570,7 +570,7 @@ def master(*args):
   sending_comms = []
   not_done = True
   alg = "small first"
-  chunck = 8
+  chunck = 6
   low_low = []
   med_low = []
   high_low = []
@@ -647,7 +647,7 @@ def master(*args):
         #check for the tasks that have been issued if not done in 60 secunds
         for task in sent_tasks:
           task.set_time_pased()
-          if task.time_pased > 59:
+          if task.time_pased > 39:
             #this_actor.info(str(task.tasknr) + " removing from sent and adding to tasks")
 
             if alg == "small first":
